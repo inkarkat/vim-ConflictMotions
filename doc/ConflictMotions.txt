@@ -1,0 +1,97 @@
+*ConflictMotions.txt*          Summary sentence.
+			^ Start here. v Center this.
+		       CONFLICT MOTIONS    by Ingo Karkat
+								*ConflictMotions.vim*
+description			|ConflictMotions-description|
+usage				|ConflictMotions-usage|
+installation			|ConflictMotions-installation|
+configuration			|ConflictMotions-configuration|
+integration			|ConflictMotions-integration|
+limitations			|ConflictMotions-limitations|
+known problems			|ConflictMotions-known-problems|
+todo				|ConflictMotions-todo|
+history				|ConflictMotions-history|
+
+==============================================================================
+DESCRIPTION				       *ConflictMotions-description*
+
+This plugin ...
+
+HOW IT WORKS								     *
+
+RELATED WORKS								     *
+
+==============================================================================
+USAGE						     *ConflictMotions-usage*
+
+]x			Go to [count] next start of a conflict.
+]X			Go to [count] next end of a conflict.
+[x			Go to [count] previous start of a conflict.
+[X			Go to [count] previous end of a conflict.
+
+]z			Go to [count] next conflict marker.
+[z			Go to [count] previous conflict marker.
+
+
+ax			"a conflict" text object, select [count] conflicts,
+			including the conflict markers.
+ix			"inner conflict" text object, select current
+			conflicted change, without surrounding conflict
+			markers.
+az			"a conflict marker" text object, select [count]
+			conflict changes, including the conflict marker above,
+			and in the case of "theirs" changes, also the ending
+			conflict marker below.
+
+==============================================================================
+INSTALLATION				      *ConflictMotions-installation*
+
+This script is packaged as a |vimball|. If you have the "gunzip" decompressor
+in your PATH, simply edit the *.vba.gz package in Vim; otherwise, decompress
+the archive first, e.g. using WinZip. Inside Vim, install by sourcing the
+vimball or via the |:UseVimball| command. >
+    vim ConflictMotions.vba.gz
+    :so %
+To uninstall, use the |:RmVimball| command.
+
+DEPENDENCIES				      *ConflictMotions-dependencies*
+
+- Requires Vim 7.0 or higher.
+
+==============================================================================
+CONFIGURATION				     *ConflictMotions-configuration*
+
+For a permanent configuration, put the following commands into your |vimrc|:
+
+						*g:ConflictMotions_MyOption*
+To change the default TODO from FOO to BAR, use: >
+    let g:ConflictMotions_MyOption = 'BAR'
+<
+==============================================================================
+INTEGRATION				       *ConflictMotions-integration*
+
+==============================================================================
+LIMITATIONS				       *ConflictMotions-limitations*
+
+KNOWN PROBLEMS				    *ConflictMotions-known-problems*
+
+TODO						      *ConflictMotions-todo*
+
+IDEAS						     *ConflictMotions-ideas*
+
+==============================================================================
+HISTORY						   *ConflictMotions-history*
+
+1.00	12-Mar-2012
+First published version.
+
+0.01	12-Mar-2012
+Started development.
+
+==============================================================================
+Copyright: (C) 2012 Ingo Karkat
+The VIM LICENSE applies to this script; see |copyright|.
+
+Maintainer:	Ingo Karkat <ingo@karkat.de>
+==============================================================================
+ vim:tw=78:ts=8:ft=help:norl:
