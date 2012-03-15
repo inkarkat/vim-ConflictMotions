@@ -1,7 +1,7 @@
-*ConflictMotions.txt*          Summary sentence.
-			^ Start here. v Center this.
-		       CONFLICT MOTIONS    by Ingo Karkat
-								*ConflictMotions.vim*
+*ConflictMotions.txt*   Motion to and inside SCM conflict markers.
+
+		      CONFLICT MOTIONS    by Ingo Karkat
+							 *ConflictMotions.vim*
 description			|ConflictMotions-description|
 usage				|ConflictMotions-usage|
 installation			|ConflictMotions-installation|
@@ -13,38 +13,47 @@ todo				|ConflictMotions-todo|
 history				|ConflictMotions-history|
 
 ==============================================================================
-DESCRIPTION				       *ConflictMotions-description*
+DESCRIPTION					 *ConflictMotions-description*
 
-This plugin ...
-
-HOW IT WORKS								     *
+This plugin defines movement commands and text objects to go to and operate on
+conflicting lines, as indicated by many revision control systems, like
+Subversion, Git, etc. The source code management system inserts conflict
+markers such as <<<<<<<, =======, and >>>>>>> on merges to indicate that the
+automatic resolution failed; this plugin helps you with locating and resolving
+these conflicts.
 
 RELATED WORKS								     *
 
-==============================================================================
-USAGE						     *ConflictMotions-usage*
+To be alerted to the existence of conflict markers and to visually
+differentiate the conflicted lines, you can use the highlighting, warnings and
+custom buffer status provided by the companion |ConflictDetection.vim| plugin
+(vimscript #0000).
 
+==============================================================================
+USAGE						       *ConflictMotions-usage*
+							   *]x* *]X* *[x* *[X*
 ]x			Go to [count] next start of a conflict.
 ]X			Go to [count] next end of a conflict.
 [x			Go to [count] previous start of a conflict.
 [X			Go to [count] previous end of a conflict.
-
+								     *]z* *[z*
 ]z			Go to [count] next conflict marker.
 [z			Go to [count] previous conflict marker.
 
-
+								     *ax* *ix*
 ax			"a conflict" text object, select [count] conflicts,
 			including the conflict markers.
 ix			"inner conflict" text object, select current
 			conflicted change, without surrounding conflict
 			markers.
+									  *az*
 az			"a conflict marker" text object, select [count]
 			conflict changes, including the conflict marker above,
 			and in the case of "theirs" changes, also the ending
 			conflict marker below.
 
 ==============================================================================
-INSTALLATION				      *ConflictMotions-installation*
+INSTALLATION					*ConflictMotions-installation*
 
 This script is packaged as a |vimball|. If you have the "gunzip" decompressor
 in your PATH, simply edit the *.vba.gz package in Vim; otherwise, decompress
@@ -54,35 +63,29 @@ vimball or via the |:UseVimball| command. >
     :so %
 To uninstall, use the |:RmVimball| command.
 
-DEPENDENCIES				      *ConflictMotions-dependencies*
+DEPENDENCIES					*ConflictMotions-dependencies*
 
 - Requires Vim 7.0 or higher.
+- Requires the CountJump plugin (vimscript #3130).
 
 ==============================================================================
-CONFIGURATION				     *ConflictMotions-configuration*
-
-For a permanent configuration, put the following commands into your |vimrc|:
-
-						*g:ConflictMotions_MyOption*
-To change the default TODO from FOO to BAR, use: >
-    let g:ConflictMotions_MyOption = 'BAR'
-<
-==============================================================================
-INTEGRATION				       *ConflictMotions-integration*
+CONFIGURATION				       *ConflictMotions-configuration*
 
 ==============================================================================
-LIMITATIONS				       *ConflictMotions-limitations*
-
-KNOWN PROBLEMS				    *ConflictMotions-known-problems*
-
-TODO						      *ConflictMotions-todo*
-
-IDEAS						     *ConflictMotions-ideas*
+INTEGRATION					 *ConflictMotions-integration*
 
 ==============================================================================
-HISTORY						   *ConflictMotions-history*
+LIMITATIONS					 *ConflictMotions-limitations*
 
-1.00	12-Mar-2012
+KNOWN PROBLEMS				      *ConflictMotions-known-problems*
+
+TODO							*ConflictMotions-todo*
+
+IDEAS						       *ConflictMotions-ideas*
+
+==============================================================================
+HISTORY						     *ConflictMotions-history*
+
 First published version.
 
 0.01	12-Mar-2012
