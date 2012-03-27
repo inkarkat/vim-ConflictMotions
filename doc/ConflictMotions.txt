@@ -31,22 +31,22 @@ custom buffer status provided by the companion |ConflictDetection.vim| plugin
 
 ==============================================================================
 USAGE						       *ConflictMotions-usage*
-							   *]x* *]X* *[x* *[X*
+   *]x* *]X* *[x* *[X* *v_]x* *v_]X* *v_[x* *v_[X* *o_]x* *o_]X* *o_[x* *o_[X*
 ]x			Go to [count] next start of a conflict.
 ]X			Go to [count] next end of a conflict.
 [x			Go to [count] previous start of a conflict.
 [X			Go to [count] previous end of a conflict.
-								     *]z* *[z*
+					 *]z* *[z* *v_]z* *v_[z* *o_]z* *o_[z*
 ]z			Go to [count] next conflict marker.
 [z			Go to [count] previous conflict marker.
 
-								     *ax* *ix*
+						       *ax* *ix* *v_ax* *v_ix*
 ax			"a conflict" text object, select [count] conflicts,
 			including the conflict markers.
 ix			"inner conflict" text object, select current
 			conflicted change, without surrounding conflict
 			markers.
-									  *az*
+								   *az* *v_az*
 az			"a conflict marker" text object, select [count]
 			conflict changes, including the conflict marker above,
 			and in the case of "theirs" changes, also the ending
