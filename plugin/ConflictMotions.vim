@@ -1,6 +1,8 @@
-" ConflictMotions.vim: summary
+" ConflictMotions.vim: Motion to and inside SCM conflict markers.
 "
 " DEPENDENCIES:
+"   - CountJump/Motion.vim autoload script
+"   - CountJump/TextObject.vim autoload script
 "
 " Copyright: (C) 2012 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
