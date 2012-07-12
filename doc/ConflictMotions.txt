@@ -1,4 +1,4 @@
-*ConflictMotions.txt*   Motion to and inside SCM conflict markers.
+*ConflictMotions.txt*   Motions to and inside SCM conflict markers.
 
 		      CONFLICT MOTIONS    by Ingo Karkat
 							 *ConflictMotions.vim*
@@ -6,7 +6,6 @@ description			|ConflictMotions-description|
 usage				|ConflictMotions-usage|
 installation			|ConflictMotions-installation|
 configuration			|ConflictMotions-configuration|
-integration			|ConflictMotions-integration|
 limitations			|ConflictMotions-limitations|
 known problems			|ConflictMotions-known-problems|
 todo				|ConflictMotions-todo|
@@ -40,17 +39,18 @@ USAGE						       *ConflictMotions-usage*
 ]z			Go to [count] next conflict marker.
 [z			Go to [count] previous conflict marker.
 
-						       *ax* *ix* *v_ax* *v_ix*
+								   *ax* *v_ax*
 ax			"a conflict" text object, select [count] conflicts,
 			including the conflict markers.
-ix			"inner conflict" text object, select current
-			conflicted change, without surrounding conflict
-			markers.
 								   *az* *v_az*
-az			"a conflict marker" text object, select [count]
-			conflict changes, including the conflict marker above,
-			and in the case of "theirs" changes, also the ending
-			conflict marker below.
+az			"a conflict section" text object, select [count]
+			sections (i.e. either ours, theirs, or base) including
+			the conflict marker above, and in the case of "theirs"
+			changes, also the ending conflict marker below.
+								   *iz* *v_iz*
+iz			"inner conflict section" text object, select current
+			section (i.e. either ours, theirs, or base) without
+			the surrounding conflict markers.
 
 ==============================================================================
 INSTALLATION					*ConflictMotions-installation*
@@ -71,8 +71,21 @@ DEPENDENCIES					*ConflictMotions-dependencies*
 ==============================================================================
 CONFIGURATION				       *ConflictMotions-configuration*
 
-==============================================================================
-INTEGRATION					 *ConflictMotions-integration*
+For a permanent configuration, put the following commands into your |vimrc|:
+
+						       *ConflictMotions-remap*
+To change the default motion mappings, use: >
+    let g:ConflictMotions_ConflictBeginMapping = 'x'
+    let g:ConflictMotions_ConflictEndMapping = 'X'
+    let g:ConflictMotions_MarkerMapping = 'z'
+To also change the [ / ] prefix to something else, follow the instructions for
+|CountJump-remap-motions|. (This requires CountJump 1.60.)
+
+To change the default text object mappings, use: >
+    let g:ConflictMotions_ConflictMapping = 'x'
+    let g:ConflictMotions_SectionMapping = 'z'
+To also change the i / a prefix to something else, follow the instructions for
+|CountJump-remap-text-objects|. (This requires CountJump 1.60.)
 
 ==============================================================================
 LIMITATIONS					 *ConflictMotions-limitations*
@@ -86,6 +99,7 @@ IDEAS						       *ConflictMotions-ideas*
 ==============================================================================
 HISTORY						     *ConflictMotions-history*
 
+1.00	28-Mar-2012
 First published version.
 
 0.01	12-Mar-2012
