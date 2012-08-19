@@ -26,7 +26,7 @@ RELATED WORKS								     *
 To be alerted to the existence of conflict markers and to visually
 differentiate the conflicted lines, you can use the highlighting, warnings and
 custom buffer status provided by the companion |ConflictDetection.vim| plugin
-(vimscript #0000).
+(vimscript #4129).
 
 ==============================================================================
 USAGE						       *ConflictMotions-usage*
