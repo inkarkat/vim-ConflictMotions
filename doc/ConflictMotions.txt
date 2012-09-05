@@ -35,20 +35,20 @@ USAGE						       *ConflictMotions-usage*
 ]X			Go to [count] next end of a conflict.
 [x			Go to [count] previous start of a conflict.
 [X			Go to [count] previous end of a conflict.
-					 *]z* *[z* *v_]z* *v_[z* *o_]z* *o_[z*
-]z			Go to [count] next conflict marker.
-[z			Go to [count] previous conflict marker.
+					 *]=* *[=* *v_]=* *v_[=* *o_]=* *o_[=*
+]=			Go to [count] next conflict marker.
+[=			Go to [count] previous conflict marker.
 
 								   *ax* *v_ax*
 ax			"a conflict" text object, select [count] conflicts,
 			including the conflict markers.
-								   *az* *v_az*
-az			"a conflict section" text object, select [count]
+								   *a=* *v_a=*
+a=			"a conflict section" text object, select [count]
 			sections (i.e. either ours, theirs, or base) including
 			the conflict marker above, and in the case of "theirs"
 			changes, also the ending conflict marker below.
-								   *iz* *v_iz*
-iz			"inner conflict section" text object, select current
+								   *i=* *v_i=*
+i=			"inner conflict section" text object, select current
 			section (i.e. either ours, theirs, or base) without
 			the surrounding conflict markers.
 
@@ -77,13 +77,13 @@ For a permanent configuration, put the following commands into your |vimrc|:
 To change the default motion mappings, use: >
     let g:ConflictMotions_ConflictBeginMapping = 'x'
     let g:ConflictMotions_ConflictEndMapping = 'X'
-    let g:ConflictMotions_MarkerMapping = 'z'
+    let g:ConflictMotions_MarkerMapping = '='
 To also change the [ / ] prefix to something else, follow the instructions for
 |CountJump-remap-motions|. (This requires CountJump 1.60.)
 
 To change the default text object mappings, use: >
     let g:ConflictMotions_ConflictMapping = 'x'
-    let g:ConflictMotions_SectionMapping = 'z'
+    let g:ConflictMotions_SectionMapping = '='
 To also change the i / a prefix to something else, follow the instructions for
 |CountJump-remap-text-objects|. (This requires CountJump 1.60.)
 
@@ -98,6 +98,11 @@ IDEAS						       *ConflictMotions-ideas*
 
 ==============================================================================
 HISTORY						     *ConflictMotions-history*
+
+1.10	20-Aug-2012
+The [z / ]z mappings disable the built-in mappings for moving over the current
+open fold. Oops! Change default to [= / ]= / i= / a=. (= as for the characters
+in the separator between our and their change).
 
 1.00	28-Mar-2012
 First published version.
