@@ -56,10 +56,10 @@ i=			"inner conflict section" text object, select current
 INSTALLATION					*ConflictMotions-installation*
 
 This script is packaged as a |vimball|. If you have the "gunzip" decompressor
-in your PATH, simply edit the *.vba.gz package in Vim; otherwise, decompress
+in your PATH, simply edit the *.vmb.gz package in Vim; otherwise, decompress
 the archive first, e.g. using WinZip. Inside Vim, install by sourcing the
 vimball or via the |:UseVimball| command. >
-    vim ConflictMotions.vba.gz
+    vim ConflictMotions*.vmb.gz
     :so %
 To uninstall, use the |:RmVimball| command.
 
@@ -99,7 +99,7 @@ IDEAS						       *ConflictMotions-ideas*
 ==============================================================================
 HISTORY						     *ConflictMotions-history*
 
-1.10	20-Aug-2012
+1.10	06-Sep-2012
 The [z / ]z mappings disable the built-in mappings for moving over the current
 open fold. Oops! Change default to [= / ]= / i= / a=. (= as for the characters
 in the separator between our and their change).
