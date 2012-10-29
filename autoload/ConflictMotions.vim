@@ -12,7 +12,30 @@
 "	001	30-Oct-2012	file creation
 
 function! ConflictMotions#Complete( ArgLead, CmdLine, CursorPos )
-    return filter(['none', 'this', 'ours', 'base', 'theirs', '-', '.', '<', '|', '>'], 'v:val =~ "\\V" . escape(a:ArgLead, "\\")')
+    return filter(['none', 'this', 'ours', 'base', 'theirs', 'both', 'all', '-', '.', '<', '|', '>', '+', '*'], 'v:val =~ "\\V" . escape(a:ArgLead, "\\")')
+endfunction
+function! s:CanonicalizeArgs( arguments, startLnum, endLnum )
+    if empty(a:arguments)
+	return ['this']
+    endif
+
+    let l:result = []
+    for l:what in a:arguments
+	if l:what ==? 'both' || l:what ==# '+'
+	    let l:result += ['ours', 'theirs']
+	elseif l:what ==? 'all' || l:what ==# '*'
+	    " The base section is optional; only capture it when it's there.
+	    if search('^|\{7}|\@!', 'bnW', a:startLnum)
+		let l:result += ['ours', 'base', 'theirs']
+	    else
+		let l:result += ['ours', 'theirs']
+	    endif
+	else
+	    call add(l:result, l:what)
+	endif
+    endfor
+
+    return l:result
 endfunction
 function! s:ErrorMsg( text )
     let v:errmsg = a:text
@@ -25,14 +48,14 @@ function! s:CaptureSection()
     set clipboard= " Avoid clobbering the selection and clipboard registers.
     let l:save_reg = getreg('"')
     let l:save_regmode = getregtype('"')
-	execute printf('normal yi%s', g:ConflictMotions_SectionMapping)
+	silent execute printf('normal yi%s', g:ConflictMotions_SectionMapping)
 	let l:section = @"
     call setreg('"', l:save_reg, l:save_regmode)
     let &clipboard = l:save_clipboard
 
     return l:section
 endfunction
-function! ConflictMotions#Take( what )
+function! ConflictMotions#Take( arguments )
     let l:currentLnum = line('.')
 
     execute printf("normal Va%s\<C-\>\<C-n>", g:ConflictMotions_ConflictMapping)
@@ -43,38 +66,44 @@ function! ConflictMotions#Take( what )
 	return
     endif
 
-    execute l:startLnum
-    if a:what ==? 'none' || a:what ==# '-'
-	let l:isFoundMarker = 1
-    elseif a:what ==? 'this' || a:what ==# '.' || empty(a:what)
-	let l:isFoundMarker = 1
-	execute l:currentLnum
-    elseif a:what ==? 'ours' || a:what ==# '<'
-	let l:isFoundMarker = 1
-    elseif a:what ==? 'base' || a:what ==# '|'
-	let l:isFoundMarker = search('^|\{7}|\@!', 'W')
-    elseif a:what ==? 'theirs' || a:what ==# '>'
-	let l:isFoundMarker = search('^=\{7}=\@!', 'W')
-    else
-	call s:ErrorMsg('Invalid argument: ' . a:what)
-	return
-    endif
 
-    if ! l:isFoundMarker
-	call s:ErrorMsg('Conflict marker not found')
-	execute "normal! \<C-\>\<C-n>\<Esc>" | " Beep.
-	return
-    endif
+    let l:sections = ''
+    for l:what in s:CanonicalizeArgs(split(a:arguments, '\s\+\|\%(\A\&\S\)\zs'), l:startLnum, l:endLnum)
+	execute l:startLnum
 
-    if a:what ==? 'none'
-	let l:section = ''
-    else
-	let l:section = s:CaptureSection()
-    endif
+	if l:what ==? 'none' || l:what ==# '-'
+	    let l:isFoundMarker = 1
+	elseif l:what ==? 'this' || l:what ==# '.'
+	    let l:isFoundMarker = 1
+	    execute l:currentLnum
+	elseif l:what ==? 'ours' || l:what ==# '<'
+	    let l:isFoundMarker = 1
+	elseif l:what ==? 'base' || l:what ==# '|'
+	    let l:isFoundMarker = search('^|\{7}|\@!', 'W')
+	elseif l:what ==? 'theirs' || l:what ==# '>'
+	    let l:isFoundMarker = search('^=\{7}=\@!', 'W')
+	else
+	    call s:ErrorMsg('Invalid argument: ' . l:what)
+	    return
+	endif
 
-    execute (empty(l:section) ? '' : 'silent') printf('%d,%ddelete _', l:startLnum, l:endLnum)
-    if ! empty(l:section)
-	call ingolines#PutWrapper(l:startLnum, 'put!', l:section)
+	if ! l:isFoundMarker
+	    execute l:currentLnum   | " Restore original cursor line.
+
+	    call s:ErrorMsg('Conflict marker not found')
+	    execute "normal! \<C-\>\<C-n>\<Esc>" | " Beep.
+
+	    return
+	endif
+
+	if l:what !=? 'none' && l:what !=# '-'
+	    let l:sections .= s:CaptureSection()
+	endif
+    endfor
+
+    execute (empty(l:sections) ? '' : 'silent') printf('%d,%ddelete _', l:startLnum, l:endLnum)
+    if ! empty(l:sections)
+	call ingolines#PutWrapper(l:startLnum, 'put!', l:sections)
     endif
 endfunction
 
