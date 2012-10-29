@@ -45,7 +45,7 @@ endif
 
 "- commands --------------------------------------------------------------------
 
-command! -bar -nargs=? -complete=customlist,ConflictMotions#Complete ConflictTake call ConflictMotions#Take(<q-args>)
+command! -bar -nargs=* -complete=customlist,ConflictMotions#Complete ConflictTake call ConflictMotions#Take(<q-args>)
 
 
 "- mappings --------------------------------------------------------------------
