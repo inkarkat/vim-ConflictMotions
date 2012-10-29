@@ -10,6 +10,8 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.00.004	30-Oct-2012	Add the :ConflictTake command to resolve a
+"				conflict by picking a section(s).
 "   1.10.003	20-Aug-2012	The [z / ]z mappings disable the built-in
 "				mappings for moving over the current open fold.
 "				Change default to [= / ]= / i= / a=.
@@ -45,7 +47,7 @@ endif
 
 "- commands --------------------------------------------------------------------
 
-command! -bar -nargs=* -complete=customlist,ConflictMotions#Complete ConflictTake call ConflictMotions#Take(<q-args>)
+command! -bar -nargs=* -range=1 -complete=customlist,ConflictMotions#Complete ConflictTake call ConflictMotions#Take(<line1>, <line2>, <q-args>)
 
 
 "- mappings --------------------------------------------------------------------
