@@ -43,6 +43,11 @@ if ! exists('g:ConflictMotions_SectionMapping')
 endif
 
 
+"- commands --------------------------------------------------------------------
+
+command! -bar -nargs=? -complete=customlist,ConflictMotions#Complete ConflictTake call ConflictMotions#Take(<q-args>)
+
+
 "- mappings --------------------------------------------------------------------
 
 call CountJump#Motion#MakeBracketMotion('', g:ConflictMotions_ConflictBeginMapping, g:ConflictMotions_ConflictEndMapping, '^<\{7}<\@!', '^>\{7}>\@!', 0)
