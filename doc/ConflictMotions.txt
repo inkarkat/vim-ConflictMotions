@@ -38,6 +38,8 @@ USAGE						       *ConflictMotions-usage*
 					 *]=* *[=* *v_]=* *v_[=* *o_]=* *o_[=*
 ]=			Go to [count] next conflict marker.
 [=			Go to [count] previous conflict marker.
+			Mnemonic: = is in the separator between our and their
+			changes.
 
 								   *ax* *v_ax*
 ax			"a conflict" text object, select [count] conflicts,
@@ -51,6 +53,27 @@ a=			"a conflict section" text object, select [count]
 i=			"inner conflict section" text object, select current
 			section (i.e. either ours, theirs, or base) without
 			the surrounding conflict markers.
+
+							       *:ConflictTake*
+:ConflictTake		From the conflict the cursor is in, remove the markers
+			and keep the section the cursor is inside.
+:[range]ConflictTake	From the conflict the cursor is in, remove the markers
+			and keep the passed range (without contained markers).
+:ConflictTake [none this ours base theirs both all] [...]
+:ConflictTake [-.<|>+*][...]
+			From the conflict the cursor is in, remove the markers
+			and keep the passed section(s) (in the order they are
+			specified).
+			    none, - = delete the entire conflict
+			    both = ours theirs		(+ = <>)
+			    all  = ours [base] theirs	(* = <|>)
+
+	      *<Leader>xd* *<Leader>x.* *<Leader>x<* *<Leader>x|* *<Leader>x>*
+<Leader>xd		Delete the entire current conflict.
+<Leader>x.		Keep the current conflict section, delete the rest.
+<Leader>x<		Keep our changes, delete the rest.
+<Leader>x|		Keep the change base, delete the rest.
+<Leader>x>		Keep their changes, delete the rest.
 
 ==============================================================================
 INSTALLATION					*ConflictMotions-installation*
@@ -87,6 +110,14 @@ To change the default text object mappings, use: >
 To also change the i / a prefix to something else, follow the instructions for
 |CountJump-remap-text-objects|. (This requires CountJump 1.60.)
 
+If you don't want the mappings for |:ConflictTake|: >
+    let g:ConflictMotions_TakeMappingPrefix = ''
+To redefine the mappings, either clear the prefix and use the
+<Plug>(ConflictMotionsTake...) mapping targets, or adapt via the prefix and
+mapping configuration, e.g.: >
+    let g:ConflictMotions_TakeMappingPrefix = '<Leader>='
+    let g:ConflictMotions_TakeMappings = [['d', 'None'], ['x', 'This'], ['o', 'Ours'], ['b', 'Base'], ['t', 'Theirs']]
+<
 ==============================================================================
 LIMITATIONS					 *ConflictMotions-limitations*
 
