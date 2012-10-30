@@ -9,16 +9,14 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
-"	001	30-Oct-2012	file creation
+"   2.00.001	30-Oct-2012	file creation
+let s:save_cpo = &cpo
+set cpo&vim
 
 function! ConflictMotions#Complete( ArgLead, CmdLine, CursorPos )
     return filter(['none', 'this', 'ours', 'base', 'theirs', 'both', 'all', '-', '.', '<', '|', '>', '+', '*'], 'v:val =~ "\\V" . escape(a:ArgLead, "\\")')
 endfunction
 function! s:CanonicalizeArgs( arguments, startLnum, endLnum )
-    if empty(a:arguments)
-	return ['this']
-    endif
-
     let l:result = []
     for l:what in a:arguments
 	if l:what ==? 'both' || l:what ==# '+'
@@ -55,22 +53,42 @@ function! s:CaptureSection()
 
     return l:section
 endfunction
-function! ConflictMotions#Take( arguments )
+function! ConflictMotions#Take( takeStartLnum, takeEndLnum, arguments )
     let l:currentLnum = line('.')
+    let l:hasTakeRange = (a:takeEndLnum != 1)
 
     execute printf("normal Va%s\<C-\>\<C-n>", g:ConflictMotions_ConflictMapping)
     let [l:startLnum, l:endLnum] = [line("'<"), line("'>")]
     if l:startLnum == l:endLnum
 	" Capture failed; the cursor is not inside a conflict.
 	" The mapping already beeped for us.
+	call s:ErrorMsg('Not inside conflict')
+	return
+    elseif l:hasTakeRange && (a:takeStartLnum < l:startLnum || a:takeEndLnum > l:endLnum)
+	execute l:currentLnum   | " Restore original cursor line.
+	call s:ErrorMsg('Range outside conflict')
 	return
     endif
 
 
     let l:sections = ''
-    for l:what in s:CanonicalizeArgs(split(a:arguments, '\s\+\|\%(\A\&\S\)\zs'), l:startLnum, l:endLnum)
+
+    if l:hasTakeRange
+	let l:sections .=
+	\   join(
+	\       filter(
+	\           getline(a:takeStartLnum, a:takeEndLnum),
+	\           'v:val !~# "^\\([<=>|]\\)\\{7}\\1\\@!"') + [''],
+	\   "\n")
+    endif
+
+    for l:what in (empty(a:arguments) && ! l:hasTakeRange ?
+    \   ['this'] :
+    \   s:CanonicalizeArgs(split(a:arguments, '\s\+\|\%(\A\&\S\)\zs'), l:startLnum, l:endLnum)
+    \)
 	execute l:startLnum
 
+	let l:isFoundMarker = 0
 	if l:what ==? 'none' || l:what ==# '-'
 	    let l:isFoundMarker = 1
 	elseif l:what ==? 'this' || l:what ==# '.'
@@ -107,4 +125,6 @@ function! ConflictMotions#Take( arguments )
     endif
 endfunction
 
+let &cpo = s:save_cpo
+unlet s:save_cpo
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
