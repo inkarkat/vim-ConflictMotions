@@ -35,11 +35,33 @@ function! s:CanonicalizeArgs( arguments, startLnum, endLnum )
 
     return l:result
 endfunction
-function! s:ErrorMsg( text )
+function! s:ErrorMsg( text, isBeep )
     let v:errmsg = a:text
     echohl ErrorMsg
     echomsg v:errmsg
     echohl None
+
+    if a:isBeep
+	execute "normal! \<C-\>\<C-n>\<Esc>" | " Beep.
+    endif
+endfunction
+function! s:FindEndOfConflict()
+    return search('^>\{7}>\@!', 'nW')
+endfunction
+function! s:GetCurrentConflict( currentLnum )
+    " This is a re-implementation of the
+    " CountJump#TextObject#TextObjectWithJumpFunctions() that doesn't beep and
+    " modify the visual selection.
+    if ! search('^<\{7}<\@!', 'bcW')
+	return [0, 0]
+    endif
+
+    let l:endLnum = s:FindEndOfConflict()
+    if ! l:endLnum || l:endLnum < a:currentLnum
+	return [0, 0]
+    endif
+
+    return [line('.'), l:endLnum]
 endfunction
 function! s:CaptureSection()
     let l:save_clipboard = &clipboard
@@ -55,25 +77,59 @@ function! s:CaptureSection()
 endfunction
 function! ConflictMotions#Take( takeStartLnum, takeEndLnum, arguments )
     let l:currentLnum = line('.')
-    let l:hasTakeRange = (a:takeEndLnum != 1)
+    let l:save_view = winsaveview()
+    let l:hasRange = (a:takeEndLnum != 1)
 
-    execute printf("normal Va%s\<C-\>\<C-n>", g:ConflictMotions_ConflictMapping)
-    let [l:startLnum, l:endLnum] = [line("'<"), line("'>")]
-    if l:startLnum == l:endLnum
+    let [l:startLnum, l:endLnum] = s:GetCurrentConflict(l:currentLnum)
+    let l:isInsideConflict = (l:startLnum != 0 && l:endLnum != 0)
+
+    if l:hasRange
+	if l:isInsideConflict && a:takeStartLnum > l:startLnum && a:takeEndLnum < l:endLnum
+	    " Take the selected lines from the current conflict.
+	    call ConflictMotions#TakeFromConflict(l:currentLnum, l:startLnum, l:endLnum, a:arguments, 'this', 1, a:takeStartLnum, a:takeEndLnum)
+	else
+	    " Go through all conflicts found in the range.
+	    let [l:takeStartLnum, l:takeEndLnum] = [a:takeStartLnum, a:takeEndLnum]
+	    call cursor(l:takeStartLnum, 1)
+	    let l:searchFlags = 'c' " Allow match at the current position for the first one.
+	    while l:startLnum <= l:takeEndLnum
+		let l:startLnum = search('^<\{7}<\@!', 'W' . l:searchFlags, l:takeEndLnum)
+		if l:startLnum == -1
+		    break
+		endif
+		let l:searchFlags = ''
+		let l:endLnum = s:FindEndOfConflict()
+		if l:endLnum == -1
+		    break
+		endif
+
+		let l:offset = ConflictMotions#TakeFromConflict(l:startLnum, l:startLnum, l:endLnum, a:arguments, 'query', 0, 0, 0)
+		if l:offset == -1
+		    break
+		else
+		    let l:takeEndLnum -= l:offset
+		endif
+	    endwhile
+
+	    if ! empty(l:searchFlags)
+		" Not a single conflict was found.
+		call winrestview(l:save_view)
+		call s:ErrorMsg(printf('No conflicts %s', (a:takeStartLnum == 1 && a:takeEndLnum == line('$') ? 'in buffer' : 'inside range')), 1)
+	    endif
+	endif
+    elseif ! l:isInsideConflict
 	" Capture failed; the cursor is not inside a conflict.
-	" The mapping already beeped for us.
-	call s:ErrorMsg('Not inside conflict')
-	return
-    elseif l:hasTakeRange && (a:takeStartLnum < l:startLnum || a:takeEndLnum > l:endLnum)
-	execute l:currentLnum   | " Restore original cursor line.
-	call s:ErrorMsg('Range outside conflict')
-	return
+	call winrestview(l:save_view)
+	call s:ErrorMsg('Not inside conflict', 1)
+    else
+	" Take from the current conflict.
+	call ConflictMotions#TakeFromConflict(l:currentLnum, l:startLnum, l:endLnum, a:arguments, 'this', 0, 0, 0)
     endif
-
-
+endfunction
+function! ConflictMotions#TakeFromConflict( currentLnum, startLnum, endLnum, arguments, defaultArgument, isKeepRange, takeStartLnum, takeEndLnum )
     let l:sections = ''
 
-    if l:hasTakeRange
+    if a:isKeepRange
 	let l:sections .=
 	\   join(
 	\       filter(
@@ -82,18 +138,18 @@ function! ConflictMotions#Take( takeStartLnum, takeEndLnum, arguments )
 	\   "\n")
     endif
 
-    for l:what in (empty(a:arguments) && ! l:hasTakeRange ?
-    \   ['this'] :
-    \   s:CanonicalizeArgs(split(a:arguments, '\s\+\|\%(\A\&\S\)\zs'), l:startLnum, l:endLnum)
+    for l:what in (empty(a:arguments) && ! a:isKeepRange ?
+    \   [a:defaultArgument] :
+    \   s:CanonicalizeArgs(split(a:arguments, '\s\+\|\%(\A\&\S\)\zs'), a:startLnum, a:endLnum)
     \)
-	execute l:startLnum
+	call cursor(a:startLnum, 1)
 
 	let l:isFoundMarker = 0
 	if l:what ==? 'none' || l:what ==# '-'
 	    let l:isFoundMarker = 1
 	elseif l:what ==? 'this' || l:what ==# '.'
 	    let l:isFoundMarker = 1
-	    execute l:currentLnum
+	    call cursor(a:currentLnum, 1)
 	elseif l:what ==? 'ours' || l:what ==# '<'
 	    let l:isFoundMarker = 1
 	elseif l:what ==? 'base' || l:what ==# '|'
@@ -101,17 +157,14 @@ function! ConflictMotions#Take( takeStartLnum, takeEndLnum, arguments )
 	elseif l:what ==? 'theirs' || l:what ==# '>'
 	    let l:isFoundMarker = search('^=\{7}=\@!', 'W')
 	else
-	    call s:ErrorMsg('Invalid argument: ' . l:what)
-	    return
+	    call s:ErrorMsg('Invalid argument: ' . l:what, 0)
+	    return -1
 	endif
 
 	if ! l:isFoundMarker
-	    execute l:currentLnum   | " Restore original cursor line.
-
-	    call s:ErrorMsg('Conflict marker not found')
-	    execute "normal! \<C-\>\<C-n>\<Esc>" | " Beep.
-
-	    return
+	    call cursor(a:startLnum, 1)
+	    call s:ErrorMsg('Conflict marker not found', 1)
+	    return -1
 	endif
 
 	if l:what !=? 'none' && l:what !=# '-'
@@ -119,9 +172,13 @@ function! ConflictMotions#Take( takeStartLnum, takeEndLnum, arguments )
 	endif
     endfor
 
-    execute (empty(l:sections) ? '' : 'silent') printf('%d,%ddelete _', l:startLnum, l:endLnum)
-    if ! empty(l:sections)
-	call ingolines#PutWrapper(l:startLnum, 'put!', l:sections)
+    execute (empty(l:sections) ? '' : 'silent') printf('%d,%ddelete _', a:startLnum, a:endLnum)
+    if empty(l:sections)
+	return (a:endLnum - a:startLnum + 1)
+    else
+	let l:prevLineCnt = line('$')
+	call ingolines#PutWrapper(a:startLnum, 'put!', l:sections)
+	return (a:endLnum - a:startLnum + 1) - (line('$') - l:prevLineCnt)
     endif
 endfunction
 
