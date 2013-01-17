@@ -44,6 +44,14 @@ if ! exists('g:ConflictMotions_SectionMapping')
     let g:ConflictMotions_SectionMapping = '='
 endif
 
+if ! exists('g:ConflictMotions_TakeMappingPrefix')
+    let g:ConflictMotions_TakeMappingPrefix = '<Leader>x'
+endif
+if ! exists('g:ConflictMotions_TakeMappings')
+    let g:ConflictMotions_TakeMappings = [['d', 'None'], ['.', 'This'], ['<lt>', 'Ours'], ['<Bar>', 'Base'], ['>', 'Theirs']]
+endif
+
+
 
 "- commands --------------------------------------------------------------------
 
@@ -58,5 +66,23 @@ call CountJump#Motion#MakeBracketMotion('', g:ConflictMotions_MarkerMapping, '',
 call CountJump#TextObject#MakeWithCountSearch('', g:ConflictMotions_ConflictMapping, 'a', 'V', '^<\{7}<\@!', '^>\{7}>\@!')
 call CountJump#TextObject#MakeWithCountSearch('', g:ConflictMotions_SectionMapping, 'i', 'V', '^\([<=|]\)\{7}\1\@!', '^\([=>|]\)\{7}\1\@!')
 call CountJump#TextObject#MakeWithCountSearch('', g:ConflictMotions_SectionMapping, 'a', 'V', '^\([<=|]\)\{7}\1\@!', '\ze\n\([=|]\)\{7}\1\@!\|^>\{7}>\@!')
+
+
+nnoremap <Plug>(ConflictMotionsTakeNone)        :ConflictTake none<CR>
+nnoremap <Plug>(ConflictMotionsTakeThis)        :ConflictTake this<CR>
+nnoremap <Plug>(ConflictMotionsTakeOurs)        :ConflictTake ours<CR>
+nnoremap <Plug>(ConflictMotionsTakeBase)        :ConflictTake base<CR>
+nnoremap <Plug>(ConflictMotionsTakeTheirs)      :ConflictTake theirs<CR>
+vnoremap <Plug>(ConflictMotionsTakeSelection)   :ConflictTake<CR>
+
+if ! empty(g:ConflictMotions_TakeMappingPrefix)
+    for [s:key, s:target] in g:ConflictMotions_TakeMappings
+	execute printf('nmap %s%s <Plug>(ConflictMotionsTake%s)', g:ConflictMotions_TakeMappingPrefix, s:key, s:target)
+    endfor
+    unlet s:key
+    unlet s:target
+
+    execute printf('vmap %s%s <Plug>(ConflictMotionsTake%s)', g:ConflictMotions_TakeMappingPrefix, '.', 'Selection')
+endif
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
