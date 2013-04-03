@@ -47,6 +47,12 @@ function! s:ErrorMsg( text, isBeep )
 	execute "normal! \<C-\>\<C-n>\<Esc>" | " Beep.
     endif
 endfunction
+function! s:EchoQuestion( conflictCnt )
+    echohl Question
+    echo (a:conflictCnt > 0 ? printf('#%d ', a:conflictCnt) : '') .
+    \   'take: (/,s)kip, (-,n)one (<,o)urs (|,b)ase (>,t)heirs (+)bot(h) (*,a)ll (q)uit/^E/^Y ?'
+    echohl None
+endfunction
 function! s:Query( conflictCnt, startLnum, endLnum )
     if ! empty(s:stickyChoice)
 	return s:stickyChoice
@@ -56,21 +62,21 @@ function! s:Query( conflictCnt, startLnum, endLnum )
     let l:padding = (winheight(0) - a:endLnum + a:startLnum - 1) / 2
     let l:firstVisibleLnum = max([1, a:startLnum - max([0, l:padding])])
     execute 'normal!' l:firstVisibleLnum . 'zt'
+    call cursor(a:startLnum, 1) " Restore the cursor to the start of the current conflict.
 
     if exists('*matchadd')
 	let l:id = matchadd('IncSearch', printf('\%%%dl\|\%%%dl', a:startLnum, a:endLnum))
     endif
 
     redraw
-
-    echohl Question
-    echo (a:conflictCnt > 0 ? printf('#%d ', a:conflictCnt) : '') .
-    \   'take: (/,s)kip, (-,n)one (<,o)urs (|,b)ase (>,t)heirs (+)bot(h) (*,a)ll (q)uit?'
-    echohl None
-
+    call s:EchoQuestion(a:conflictCnt)
     while 1
 	let l:choice = nr2char(getchar())
-	if l:choice =~? '[-n/s<o|b>t+h*aq\e]'
+	if l:choice =~# "[\<C-e>\<C-y>]"
+	    execute 'normal!' l:choice
+	    redraw
+	    call s:EchoQuestion(a:conflictCnt)
+	elseif l:choice =~? '[-n/s<o|b>t+h*aq\e]'
 	    let l:response =
 	    \   {
 	    \       '-': 'none',
