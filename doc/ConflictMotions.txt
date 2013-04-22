@@ -105,6 +105,8 @@ DEPENDENCIES					*ConflictMotions-dependencies*
 
 - Requires Vim 7.0 or higher.
 - Requires the CountJump plugin (vimscript #3130).
+- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.004 or
+  higher.
 
 ==============================================================================
 CONFIGURATION				       *ConflictMotions-configuration*
@@ -145,6 +147,13 @@ IDEAS						       *ConflictMotions-ideas*
 ==============================================================================
 HISTORY						     *ConflictMotions-history*
 
+2.00	RELEASEME
+- FIX: Don't create the default mapping for
+  <Plug>(ConflictMotionsTakeSelection) in select mode; it should insert a
+  literal <Leader> there.
+- Add the :ConflictTake command to resolve a conflict by picking a section(s).
+- Add dependency to ingo-library (vimscript #4433).
+
 1.10	06-Sep-2012
 The [z / ]z mappings disable the built-in mappings for moving over the current
 open fold. Oops! Change default to [= / ]= / i= / a=. (= as for the characters
@@ -157,7 +166,7 @@ First published version.
 Started development.
 
 ==============================================================================
-Copyright: (C) 2012 Ingo Karkat
+Copyright: (C) 2012-2013 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
