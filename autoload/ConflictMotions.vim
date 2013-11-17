@@ -1,14 +1,15 @@
 " ConflictMotions.vim: Motions to and inside SCM conflict markers.
 "
 " DEPENDENCIES:
-"   - ingolines.vim autoload script
+"   - ingo/lines.vim autoload script
 "
-" Copyright: (C) 2012 Ingo Karkat
+" Copyright: (C) 2012-2013 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.00.003	04-Apr-2013	Move ingolines#PutWrapper() into ingo-library.
 "   2.00.002	31-Oct-2012	Implement iteration over all markers in the
 "				passed range.
 "   2.00.001	30-Oct-2012	file creation
@@ -277,7 +278,7 @@ function! ConflictMotions#TakeFromConflict( conflictCnt, currentLnum, startLnum,
 	return (a:endLnum - a:startLnum + 1)
     else
 	let l:prevLineCnt = line('$')
-	call ingolines#PutWrapper(a:startLnum, 'put!', l:sections)
+	call ingo#lines#PutWrapper(a:startLnum, 'put!', l:sections)
 	return (a:endLnum - a:startLnum + 1) - (line('$') - l:prevLineCnt)
     endif
 endfunction
