@@ -147,7 +147,7 @@ IDEAS						       *ConflictMotions-ideas*
 ==============================================================================
 HISTORY						     *ConflictMotions-history*
 
-2.00	RELEASEME
+2.00	23-Apr-2013
 - FIX: Don't create the default mapping for
   <Plug>(ConflictMotionsTakeSelection) in select mode; it should insert a
   literal <Leader> there.
