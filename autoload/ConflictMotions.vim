@@ -2,6 +2,7 @@
 "
 " DEPENDENCIES:
 "   - ingo/lines.vim autoload script
+"   - ingo/register.vim autoload script
 "
 " Copyright: (C) 2012-2013 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
@@ -9,6 +10,7 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.01.004	18-Nov-2013	Use ingo#register#KeepRegisterExecuteOrFunc().
 "   2.00.003	04-Apr-2013	Move ingolines#PutWrapper() into ingo-library.
 "   2.00.002	31-Oct-2012	Implement iteration over all markers in the
 "				passed range.
@@ -140,16 +142,7 @@ function! s:GetCurrentConflict( currentLnum )
     return [line('.'), l:endLnum]
 endfunction
 function! s:CaptureSection()
-    let l:save_clipboard = &clipboard
-    set clipboard= " Avoid clobbering the selection and clipboard registers.
-    let l:save_reg = getreg('"')
-    let l:save_regmode = getregtype('"')
-	silent execute printf('normal yi%s', g:ConflictMotions_SectionMapping)
-	let l:section = @"
-    call setreg('"', l:save_reg, l:save_regmode)
-    let &clipboard = l:save_clipboard
-
-    return l:section
+    return ingo#register#KeepRegisterExecuteOrFunc('silent execute "normal yi" . ' . string(g:ConflictMotions_SectionMapping) . '| return @"')
 endfunction
 function! ConflictMotions#Take( takeStartLnum, takeEndLnum, arguments )
     let s:stickyChoice = ''
