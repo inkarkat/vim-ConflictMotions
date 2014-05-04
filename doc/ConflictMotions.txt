@@ -105,7 +105,7 @@ DEPENDENCIES					*ConflictMotions-dependencies*
 
 - Requires Vim 7.0 or higher.
 - Requires the CountJump plugin (vimscript #3130).
-- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.004 or
+- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.015 or
   higher.
 
 ==============================================================================
@@ -146,6 +146,10 @@ IDEAS						       *ConflictMotions-ideas*
 
 ==============================================================================
 HISTORY						     *ConflictMotions-history*
+
+2.01	RELEASEME
+- Use ingo#register#KeepRegisterExecuteOrFunc(). *** You need to update to
+  ingo-library (vimscript #4433) version 1.015! ***
 
 2.00	23-Apr-2013
 - FIX: Don't create the default mapping for
