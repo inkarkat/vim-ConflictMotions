@@ -10,6 +10,9 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.00.005	18-Jan-2013	FIX: Don't create the default mapping for
+"				<Plug>(ConflictMotionsTakeSelection) in select
+"				mode; it should insert a literal <Leader> there.
 "   2.00.004	30-Oct-2012	Add the :ConflictTake command to resolve a
 "				conflict by picking a section(s).
 "   1.10.003	20-Aug-2012	The [z / ]z mappings disable the built-in
@@ -82,7 +85,7 @@ if ! empty(g:ConflictMotions_TakeMappingPrefix)
     unlet s:key
     unlet s:target
 
-    execute printf('vmap %s%s <Plug>(ConflictMotionsTake%s)', g:ConflictMotions_TakeMappingPrefix, '.', 'Selection')
+    execute printf('xmap %s%s <Plug>(ConflictMotionsTake%s)', g:ConflictMotions_TakeMappingPrefix, '.', 'Selection')
 endif
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
