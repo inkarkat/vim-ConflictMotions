@@ -11,6 +11,9 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.01.006	19-May-2014	BUG: "E16: Invalid range" error when taking a
+"				conflict section of a hunk at the end of the
+"				file. Use ingo#lines#PutBefore().
 "   2.01.005	05-May-2014	Use ingo#msg#ErrorMsg().
 "   2.01.004	18-Nov-2013	Use ingo#register#KeepRegisterExecuteOrFunc().
 "   2.00.003	04-Apr-2013	Move ingolines#PutWrapper() into ingo-library.
@@ -263,7 +266,7 @@ function! ConflictMotions#TakeFromConflict( conflictCnt, currentLnum, startLnum,
 	return (a:endLnum - a:startLnum + 1)
     else
 	let l:prevLineCnt = line('$')
-	call ingo#lines#PutWrapper(a:startLnum, 'put!', l:sections)
+	call ingo#lines#PutBefore(a:startLnum, l:sections)
 	return (a:endLnum - a:startLnum + 1) - (line('$') - l:prevLineCnt)
     endif
 endfunction
