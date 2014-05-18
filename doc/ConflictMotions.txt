@@ -105,7 +105,7 @@ DEPENDENCIES					*ConflictMotions-dependencies*
 
 - Requires Vim 7.0 or higher.
 - Requires the CountJump plugin (vimscript #3130).
-- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.015 or
+- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.019 or
   higher.
 
 ==============================================================================
@@ -149,7 +149,7 @@ HISTORY						     *ConflictMotions-history*
 
 2.01	RELEASEME
 - Use ingo#register#KeepRegisterExecuteOrFunc(). *** You need to update to
-  ingo-library (vimscript #4433) version 1.015! ***
+  ingo-library (vimscript #4433) version 1.019! ***
 
 2.00	23-Apr-2013
 - FIX: Don't create the default mapping for
@@ -170,7 +170,7 @@ First published version.
 Started development.
 
 ==============================================================================
-Copyright: (C) 2012-2013 Ingo Karkat
+Copyright: (C) 2012-2014 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
