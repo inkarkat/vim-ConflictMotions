@@ -2,14 +2,16 @@
 "
 " DEPENDENCIES:
 "   - ingo/lines.vim autoload script
+"   - ingo/msg.vim autoload script
 "   - ingo/register.vim autoload script
 "
-" Copyright: (C) 2012-2013 Ingo Karkat
+" Copyright: (C) 2012-2014 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.01.005	05-May-2014	Use ingo#msg#ErrorMsg().
 "   2.01.004	18-Nov-2013	Use ingo#register#KeepRegisterExecuteOrFunc().
 "   2.00.003	04-Apr-2013	Move ingolines#PutWrapper() into ingo-library.
 "   2.00.002	31-Oct-2012	Implement iteration over all markers in the
@@ -39,16 +41,6 @@ function! s:CanonicalizeArguments( arguments, startLnum, endLnum )
     endfor
 
     return l:result
-endfunction
-function! s:ErrorMsg( text, isBeep )
-    let v:errmsg = a:text
-    echohl ErrorMsg
-    echomsg v:errmsg
-    echohl None
-
-    if a:isBeep
-	execute "normal! \<C-\>\<C-n>\<Esc>" | " Beep.
-    endif
 endfunction
 function! s:EchoQuestion( conflictCnt )
     echohl Question
@@ -185,13 +177,13 @@ function! ConflictMotions#Take( takeStartLnum, takeEndLnum, arguments )
 	    if l:conflictCnt == 0
 		" Not a single conflict was found.
 		call winrestview(l:save_view)
-		call s:ErrorMsg(printf('No conflicts %s', (a:takeStartLnum == 1 && a:takeEndLnum == line('$') ? 'in buffer' : 'inside range')), 1)
+		call ingo#msg#ErrorMsg(printf('No conflicts %s', (a:takeStartLnum == 1 && a:takeEndLnum == line('$') ? 'in buffer' : 'inside range')), 1)
 	    endif
 	endif
     elseif ! l:isInsideConflict
 	" Capture failed; the cursor is not inside a conflict.
 	call winrestview(l:save_view)
-	call s:ErrorMsg('Not inside conflict', 1)
+	call ingo#msg#ErrorMsg('Not inside conflict', 1)
     else
 	" Take from the current conflict.
 	call ConflictMotions#TakeFromConflict(0, l:currentLnum, l:startLnum, l:endLnum, a:arguments, 'this', 0, 0, 0)
@@ -237,7 +229,7 @@ function! ConflictMotions#TakeFromConflict( conflictCnt, currentLnum, startLnum,
 		let l:isFoundMarker = 1
 	    else
 		call cursor(a:currentLnum, 1)
-		call s:ErrorMsg('No range given; invalid argument "' . l:what . '"', 0)
+		call ingo#msg#ErrorMsg('No range given; invalid argument "' . l:what . '"')
 		return -1
 	    endif
 	elseif l:what ==? 'query' || l:what ==# '?'
@@ -249,13 +241,13 @@ function! ConflictMotions#TakeFromConflict( conflictCnt, currentLnum, startLnum,
 		return ConflictMotions#TakeFromConflict(a:conflictCnt, a:currentLnum, a:startLnum, a:endLnum, l:response, '', a:isKeepRange, a:takeStartLnum, a:takeEndLnum)
 	    endif
 	else
-	    call s:ErrorMsg('Invalid argument: ' . l:what, 0)
+	    call ingo#msg#ErrorMsg('Invalid argument: ' . l:what)
 	    return -1
 	endif
 
 	if ! l:isFoundMarker
 	    call cursor(a:startLnum, 1)
-	    call s:ErrorMsg('Conflict marker not found', 1)
+	    call ingo#msg#ErrorMsg('Conflict marker not found', 1)
 	    return -1
 	endif
 
