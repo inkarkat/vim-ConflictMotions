@@ -21,6 +21,13 @@
 "				ingo#lines#Replace(), which now handles this.
 "				Thanks to Kballard for reporting this on the Vim
 "				Tips Wiki.
+"				The CountJump operator-pending mapping will beep
+"				when the inner conflict section is empty, but
+"				for taking such a section, the beep is
+"				unexpected. Detect this special case and skip
+"				the CountJump text object then. Thanks to
+"				Kballard for reporting this on the Vim Tips
+"				Wiki.
 "   2.01.005	05-May-2014	Use ingo#msg#ErrorMsg().
 "   2.01.004	18-Nov-2013	Use ingo#register#KeepRegisterExecuteOrFunc().
 "   2.00.003	04-Apr-2013	Move ingolines#PutWrapper() into ingo-library.
@@ -144,6 +151,15 @@ function! s:GetCurrentConflict( currentLnum )
     return [line('.'), l:endLnum]
 endfunction
 function! s:CaptureSection()
+    if search('^\([<=|]\)\{7}\1\@!.*\n\([=>|]\)\{7}\1\@!', 'bcnW', line('.')) > 0 ||
+    \   search('^\([<=|]\)\{7}\1\@!.*\n>\{7}>\@!', 'bcnW', line('.') - 1) > 0
+	" The CountJump operator-pending mapping will beep when the inner
+	" conflict section is empty, but for taking such a section, the beep is
+	" unexpected (because the other sections are deleted, and in this corner
+	" case, "nothing" is kept). As we cannot easily :silent the CountJump,
+	" detect this special case and skip the CountJump text object then.
+	return ''
+    endif
     return ingo#register#KeepRegisterExecuteOrFunc('silent execute "normal yi" . ' . string(g:ConflictMotions_SectionMapping) . '| return @"')
 endfunction
 function! ConflictMotions#Take( takeStartLnum, takeEndLnum, arguments )
