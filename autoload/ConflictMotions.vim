@@ -13,7 +13,14 @@
 " REVISION	DATE		REMARKS
 "   2.01.006	19-May-2014	BUG: "E16: Invalid range" error when taking a
 "				conflict section of a hunk at the end of the
-"				file. Use ingo#lines#PutBefore().
+"				file. Use ingo#lines#PutBefore(). Thanks to
+"				Kballard for reporting this on the Vim Tips Wiki
+"				and suggesting the fix.
+"				BUG: Taking conflicts where a single hunk spans
+"				the entire buffer adds a blank line. Use
+"				ingo#lines#Replace(), which now handles this.
+"				Thanks to Kballard for reporting this on the Vim
+"				Tips Wiki.
 "   2.01.005	05-May-2014	Use ingo#msg#ErrorMsg().
 "   2.01.004	18-Nov-2013	Use ingo#register#KeepRegisterExecuteOrFunc().
 "   2.00.003	04-Apr-2013	Move ingolines#PutWrapper() into ingo-library.
@@ -261,12 +268,12 @@ function! ConflictMotions#TakeFromConflict( conflictCnt, currentLnum, startLnum,
 	endif
     endfor
 
-    execute (empty(l:sections) ? '' : 'silent') printf('%d,%ddelete _', a:startLnum, a:endLnum)
     if empty(l:sections)
+	execute printf('%d,%ddelete _', a:startLnum, a:endLnum)
 	return (a:endLnum - a:startLnum + 1)
     else
 	let l:prevLineCnt = line('$')
-	call ingo#lines#PutBefore(a:startLnum, l:sections)
+	call ingo#lines#Replace(a:startLnum, a:endLnum, l:sections)
 	return (a:endLnum - a:startLnum + 1) - (line('$') - l:prevLineCnt)
     endif
 endfunction
