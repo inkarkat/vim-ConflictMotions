@@ -11,6 +11,9 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.02.007	18-Jul-2014	Regression: Version 2.01 introduced a bad offset
+"				calculation, potentially resulting in left-over
+"				conflicts, e.g. on :%ConflictTake.
 "   2.01.006	19-May-2014	BUG: "E16: Invalid range" error when taking a
 "				conflict section of a hunk at the end of the
 "				file. Use ingo#lines#PutBefore(). Thanks to
@@ -299,7 +302,7 @@ function! ConflictMotions#TakeFromConflict( conflictCnt, currentLnum, startLnum,
     else
 	let l:prevLineCnt = line('$')
 	call ingo#lines#Replace(a:startLnum, a:endLnum, l:sections)
-	return (a:endLnum - a:startLnum + 1) - (line('$') - l:prevLineCnt)
+	return l:prevLineCnt - line('$')
     endif
 endfunction
 
