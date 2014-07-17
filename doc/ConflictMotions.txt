@@ -147,7 +147,7 @@ IDEAS						       *ConflictMotions-ideas*
 ==============================================================================
 HISTORY						     *ConflictMotions-history*
 
-2.01	RELEASEME
+2.01	31-May-2014
 - BUG: "E16: Invalid range" error when taking a conflict section of a hunk at
   the end of the file. Use ingo#lines#PutBefore(). Thanks to Kballard for
   reporting this on the Vim Tips Wiki and suggesting the fix.
