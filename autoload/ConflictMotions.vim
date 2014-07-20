@@ -11,6 +11,12 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.10.008	21-Jul-2014	Handle folded ranges overlapping the conflicts.
+"				Thanks to Maxim Gonchar for reporting this.
+"				When querying which conflict sections to keep,
+"				open folds so that if possible the entire
+"				conflict is visible, but at least the section
+"				markers.
 "   2.02.007	18-Jul-2014	Regression: Version 2.01 introduced a bad offset
 "				calculation, potentially resulting in left-over
 "				conflicts, e.g. on :%ConflictTake.
@@ -77,8 +83,26 @@ function! s:Query( conflictCnt, startLnum, endLnum )
 	return s:stickyChoice
     endif
 
+    let l:currentHeight = winheight(0)
+    let l:conflictHeight = a:endLnum - a:startLnum + 1
+
+    " Open folds.
+    if l:conflictHeight + 2 < l:currentHeight
+	" The entire conflict easily fits into the current window; open all
+	" folds.
+	execute printf('%d,%dfoldopen!', a:startLnum, a:endLnum)
+    else
+	" The conflict does not / only barely fits into the current window; just
+	" make the lines with the fold markers visible (entire substructures
+	" inside a conflict section may continue to be folded, to save space).
+	execute a:startLnum 'normal! zv'
+	while search('^\([=>|]\)\{7}\1\@!', 'W', a:endLnum) > 0
+	    normal! zv
+	endwhile
+    endif
+
     " If possible, show the entire conflict (in the middle) of the window.
-    let l:padding = (winheight(0) - a:endLnum + a:startLnum - 1) / 2
+    let l:padding = (l:currentHeight - l:conflictHeight) / 2
     let l:firstVisibleLnum = max([1, a:startLnum - max([0, l:padding])])
     execute 'normal!' l:firstVisibleLnum . 'zt'
     call cursor(a:startLnum, 1) " Restore the cursor to the start of the current conflict.
@@ -304,14 +328,20 @@ function! ConflictMotions#TakeFromConflict( conflictCnt, currentLnum, startLnum,
 	endif
     endfor
 
-    if empty(l:sections)
-	execute printf('%d,%ddelete _', a:startLnum, a:endLnum)
-	return (a:endLnum - a:startLnum + 1)
-    else
-	let l:prevLineCnt = line('$')
-	call ingo#lines#Replace(a:startLnum, a:endLnum, l:sections)
-	return l:prevLineCnt - line('$')
-    endif
+    let l:save_foldenable = &l:foldenable
+    setlocal nofoldenable
+    try
+	if empty(l:sections)
+	    execute printf('%d,%ddelete _', a:startLnum, a:endLnum)
+	    return (a:endLnum - a:startLnum + 1)
+	else
+	    let l:prevLineCnt = line('$')
+	    call ingo#lines#Replace(a:startLnum, a:endLnum, l:sections)
+	    return l:prevLineCnt - line('$')
+	endif
+    finally
+	let &l:foldenable = l:save_foldenable
+    endtry
 endfunction
 
 let &cpo = s:save_cpo
