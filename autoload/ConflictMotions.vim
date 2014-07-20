@@ -202,19 +202,20 @@ function! ConflictMotions#Take( takeStartLnum, takeEndLnum, arguments )
     let l:currentLnum = line('.')
     let l:save_view = winsaveview()
     let l:hasRange = (a:takeEndLnum != 1)
+    let l:arguments = split(a:arguments, '\s\+\|\%(\A\&\S\)\zs')
 
     let [l:startLnum, l:endLnum] = s:GetCurrentConflict(l:currentLnum)
     let l:isInsideConflict = (l:startLnum != 0 && l:endLnum != 0)
 
     if l:hasRange
 	if l:isInsideConflict && a:takeStartLnum > l:startLnum && a:takeEndLnum < l:endLnum
-	    if ! empty(a:arguments)
+	    if ! empty(l:arguments)
 		call ingo#err#Set('Cannot combine range inside conflict with section argument.')
 		return 0
 	    endif
 
 	    " Take the selected lines from the current conflict.
-	    return (ConflictMotions#TakeFromConflict(0, l:currentLnum, l:startLnum, l:endLnum, a:arguments, 'this', 1, a:takeStartLnum, a:takeEndLnum) != -1)
+	    return (ConflictMotions#TakeFromConflict(0, l:currentLnum, l:startLnum, l:endLnum, l:arguments, 'this', 1, a:takeStartLnum, a:takeEndLnum) != -1)
 	else
 	    " Go through all conflicts found in the range.
 	    let [l:takeStartLnum, l:takeEndLnum] = [a:takeStartLnum, a:takeEndLnum]
@@ -232,7 +233,7 @@ function! ConflictMotions#Take( takeStartLnum, takeEndLnum, arguments )
 		endif
 
 		let l:conflictCnt += 1
-		let l:offset = ConflictMotions#TakeFromConflict(l:conflictCnt, l:startLnum, l:startLnum, l:endLnum, a:arguments, 'query', 0, 0, 0)
+		let l:offset = ConflictMotions#TakeFromConflict(l:conflictCnt, l:startLnum, l:startLnum, l:endLnum, l:arguments, 'query', 0, 0, 0)
 		if l:offset == -1
 		    break
 		else
@@ -256,11 +257,11 @@ function! ConflictMotions#Take( takeStartLnum, takeEndLnum, arguments )
 	return 0
     else
 	" Take from the current conflict.
-	return (ConflictMotions#TakeFromConflict(0, l:currentLnum, l:startLnum, l:endLnum, a:arguments, 'this', 0, 0, 0) != -1)
+	return (ConflictMotions#TakeFromConflict(0, l:currentLnum, l:startLnum, l:endLnum, l:arguments, 'this', 0, 0, 0) != -1)
     endif
 endfunction
 function! ConflictMotions#TakeFromConflict( conflictCnt, currentLnum, startLnum, endLnum, arguments, defaultArgument, isKeepRange, takeStartLnum, takeEndLnum )
-"****D echomsg '****' a:arguments a:isKeepRange a:startLnum a:endLnum
+"****D echomsg '****' string(a:arguments) a:isKeepRange a:startLnum a:endLnum
     if a:isKeepRange
 	let l:rangeSection =
 	\   join(
@@ -271,11 +272,10 @@ function! ConflictMotions#TakeFromConflict( conflictCnt, currentLnum, startLnum,
     endif
 
     let l:sections = ''
-    let l:arguments = split(a:arguments, '\s\+\|\%(\A\&\S\)\zs')
     for l:what in (empty(a:arguments) && ! a:isKeepRange ?
     \   [a:defaultArgument] :
-    \   s:CanonicalizeArguments(l:arguments, a:startLnum, a:endLnum) +
-    \       (! a:isKeepRange || index(l:arguments, 'range', 0, 1) != -1 || index(l:arguments, ':') != -1 ? [] : ['range'])
+    \   s:CanonicalizeArguments(a:arguments, a:startLnum, a:endLnum) +
+    \       (! a:isKeepRange || index(a:arguments, 'range', 0, 1) != -1 || index(a:arguments, ':') != -1 ? [] : ['range'])
     \)
 	call cursor(a:startLnum, 1)
 
