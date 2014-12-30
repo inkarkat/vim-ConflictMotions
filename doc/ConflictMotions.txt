@@ -21,12 +21,19 @@ markers such as <<<<<<<, =======, and >>>>>>> on merges to indicate that the
 automatic resolution failed; this plugin helps you with locating and resolving
 these conflicts.
 
-RELATED WORKS								     *
+SEE ALSO								     *
 
 To be alerted to the existence of conflict markers and to visually
 differentiate the conflicted lines, you can use the highlighting, warnings and
 custom buffer status provided by the companion |ConflictDetection.vim| plugin
 (vimscript #4129).
+
+RELATED WORKS								     *
+
+- conflict-marker.vim (https://github.com/rhysd/conflict-marker.vim)
+  highlights conflicts and provides quite similar motions (utilizing
+  matchit.vim for jumps within a conflict), and similar commands to resolve a
+  conflict.
 
 ==============================================================================
 USAGE						       *ConflictMotions-usage*
