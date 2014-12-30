@@ -17,6 +17,16 @@
 "				open folds so that if possible the entire
 "				conflict is visible, but at least the section
 "				markers.
+"				Re-allow combining range inside conflict with
+"				section argument, but only for the :ConflictTake
+"				command, not the mappings. Because we cannot
+"				pass the range to the :if necessary for error
+"				handling, it's convenient that the mappings
+"				continue to invoke the :ConflictTake command.
+"				Refactoring: Split arguments earlier.
+"				Indicate invocation from mapping via a special,
+"				hidden "mapping" argument, and print a
+"				(modified) error message only in that case.
 "   2.02.007	18-Jul-2014	Regression: Version 2.01 introduced a bad offset
 "				calculation, potentially resulting in left-over
 "				conflicts, e.g. on :%ConflictTake.
@@ -204,13 +214,19 @@ function! ConflictMotions#Take( takeStartLnum, takeEndLnum, arguments )
     let l:hasRange = (a:takeEndLnum != 1)
     let l:arguments = split(a:arguments, '\s\+\|\%(\A\&\S\)\zs')
 
+    let l:isMapping = 0
+    if get(l:arguments, 0, '') ==# 'mapping'    " Special, hidden argument for internal use.
+	let l:isMapping = 1
+	call remove(l:arguments, 0)
+    endif
+
     let [l:startLnum, l:endLnum] = s:GetCurrentConflict(l:currentLnum)
     let l:isInsideConflict = (l:startLnum != 0 && l:endLnum != 0)
 
     if l:hasRange
 	if l:isInsideConflict && a:takeStartLnum > l:startLnum && a:takeEndLnum < l:endLnum
-	    if ! empty(l:arguments)
-		call ingo#err#Set('Cannot combine range inside conflict with section argument.')
+	    if l:isMapping && ! empty(l:arguments)
+		call ingo#err#Set('Cannot apply to range inside conflict; select full conflict(s).')
 		return 0
 	    endif
 
