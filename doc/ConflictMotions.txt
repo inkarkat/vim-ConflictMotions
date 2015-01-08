@@ -164,6 +164,10 @@ IDEAS						       *ConflictMotions-ideas*
 ==============================================================================
 HISTORY						     *ConflictMotions-history*
 
+2.11	RELEASEME
+- FIX: Need to convert the passed range into net lines, as we're gonna turn
+  off folding.
+
 2.10	21-Jul-2014
 - ENH: Define both normal and visual mode mappings for all mappings, not the
   exclusive either-or. The new visual mode mappings will select the
