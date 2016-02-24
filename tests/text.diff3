@@ -44,9 +44,14 @@ fi
 echo "directories=$directories"
 
 ||||||| l.orig
+START
 echo "directories=$directories"
 echo "files=$files"
-
+INNER
+ONE
+foobar
+hihihi
+END
 =======
 >>>>>>> l.your
 if [ "$directories" ]; then
