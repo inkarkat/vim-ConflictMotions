@@ -1,4 +1,3 @@
-autoload/ingolines.vim
 autoload/ConflictMotions.vim
 plugin/ConflictMotions.vim
 doc/ConflictMotions.txt
