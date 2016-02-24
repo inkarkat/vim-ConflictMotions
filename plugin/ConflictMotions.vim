@@ -85,20 +85,25 @@ call CountJump#TextObject#MakeWithCountSearch('', g:ConflictMotions_SectionMappi
 call CountJump#TextObject#MakeWithCountSearch('', g:ConflictMotions_SectionMapping, 'a', 'V', '^\([<=|]\)\{7}\1\@!', '\ze\n\([=|]\)\{7}\1\@!\|^>\{7}>\@!')
 
 
-noremap <silent> <Plug>(ConflictMotionsTakeNone)        :ConflictTake none<Bar>
+noremap <silent> <Plug>(ConflictMotionsTakeNone)
+\ :ConflictTake mapping none<Bar>
 \execute 'silent! call repeat#set("\<lt>Plug>(ConflictMotionsTakeNone)", -1)'<Bar>
 \execute 'silent! call visualrepeat#set("\<lt>Plug>(ConflictMotionsTakeNone)", -1)'<CR>
-noremap <silent> <Plug>(ConflictMotionsTakeOurs)        :ConflictTake ours<Bar>
+noremap <silent> <Plug>(ConflictMotionsTakeOurs)
+\ :ConflictTake mapping ours<Bar>
 \execute 'silent! call repeat#set("\<lt>Plug>(ConflictMotionsTakeOurs)", -1)'<Bar>
 \execute 'silent! call visualrepeat#set("\<lt>Plug>(ConflictMotionsTakeOurs)", -1)'<CR>
-noremap <silent> <Plug>(ConflictMotionsTakeBase)        :ConflictTake base<Bar>
+noremap <silent> <Plug>(ConflictMotionsTakeBase)
+\ :ConflictTake mapping base<Bar>
 \execute 'silent! call repeat#set("\<lt>Plug>(ConflictMotionsTakeBase)", -1)'<Bar>
 \execute 'silent! call visualrepeat#set("\<lt>Plug>(ConflictMotionsTakeBase)", -1)'<CR>
-noremap <silent> <Plug>(ConflictMotionsTakeTheirs)      :ConflictTake theirs<Bar>
+noremap <silent> <Plug>(ConflictMotionsTakeTheirs)
+\ :ConflictTake mapping theirs<Bar>
 \execute 'silent! call repeat#set("\<lt>Plug>(ConflictMotionsTakeTheirs)", -1)'<Bar>
 \execute 'silent! call visualrepeat#set("\<lt>Plug>(ConflictMotionsTakeTheirs)", -1)'<CR>
 
-nnoremap <silent> <Plug>(ConflictMotionsTakeThis)        :ConflictTake this<Bar>
+nnoremap <silent> <Plug>(ConflictMotionsTakeThis)
+\ :ConflictTake mapping this<Bar>
 \execute 'silent! call repeat#set("\<lt>Plug>(ConflictMotionsTakeThis)", -1)'<Bar>
 \execute 'silent! call visualrepeat#set("\<lt>Plug>(ConflictMotionsTakeThis)", -1)'<CR>
 " The "this" section conflicts with a visual selection, as the cursor cannot be
@@ -106,7 +111,8 @@ nnoremap <silent> <Plug>(ConflictMotionsTakeThis)        :ConflictTake this<Bar>
 " modes.
 vnoremap <silent> <Plug>(ConflictMotionsTakeThis)        :<C-u>execute "normal! \<lt>C-\>\<lt>C-n>\<lt>Esc>"<CR>gv
 
-noremap <silent> <Plug>(ConflictMotionsTakeSelection)   :ConflictTake<Bar>
+noremap <silent> <Plug>(ConflictMotionsTakeSelection)
+\ :ConflictTake mapping<Bar>
 \execute 'silent! call repeat#set("\<lt>Plug>(ConflictMotionsTakeSelection)", -1)'<Bar>
 \execute 'silent! call visualrepeat#set("\<lt>Plug>(ConflictMotionsTakeSelection)", -1)'<CR>
 " Repeat taking the selected lines as taking the current section in normal mode.
