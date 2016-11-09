@@ -34,6 +34,9 @@ RELATED WORKS								     *
   highlights conflicts and provides quite similar motions (utilizing
   matchit.vim for jumps within a conflict), and similar commands to resolve a
   conflict.
+- The ConflictToDiff plugin (vimscript #621) can split a (it says CVS, but
+  also works for other tools) conflict file back into the two conflicting
+  versions and a merge target, and offers commands to merge them.
 
 ==============================================================================
 USAGE						       *ConflictMotions-usage*
@@ -223,7 +226,7 @@ First published version.
 Started development.
 
 ==============================================================================
-Copyright: (C) 2012-2014 Ingo Karkat
+Copyright: (C) 2012-2015 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
