@@ -5,12 +5,13 @@
 "   - ingo/err.vim autoload script
 "   - ingo/register.vim autoload script
 "
-" Copyright: (C) 2012-2014 Ingo Karkat
+" Copyright: (C) 2012-2016 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.11.010	17-Dec-2016	Use ingo#err#SetAndBeep().
 "   2.11.009	31-Dec-2014	FIX: Need to convert the passed range into net
 "				lines, as we're gonna turn off folding.
 "   2.10.008	21-Jul-2014	Handle folded ranges overlapping the conflicts.
@@ -193,10 +194,6 @@ function! s:GetCurrentConflict( currentLnum )
 
     return [line('.'), l:endLnum]
 endfunction
-function! s:SetErrorAndBeep( msg )
-    call ingo#err#Set(a:msg)
-    execute "normal! \<C-\>\<C-n>\<Esc>" | " Beep.
-endfunction
 function! s:CaptureSection()
     if search('^\([<=|]\)\{7}\1\@!.*\n\([=>|]\)\{7}\1\@!', 'bcnW', line('.')) > 0 ||
     \   search('^\([<=|]\)\{7}\1\@!.*\n>\{7}>\@!', 'bcnW', line('.') - 1) > 0
@@ -262,7 +259,7 @@ function! ConflictMotions#Take( takeStartLnum, takeEndLnum, arguments )
 	    if l:conflictCnt == 0
 		" Not a single conflict was found.
 		call winrestview(l:save_view)
-		call s:SetErrorAndBeep(printf('No conflicts %s', (a:takeStartLnum == 1 && a:takeEndLnum == line('$') ? 'in buffer' : 'inside range')))
+		call ingo#err#SetAndBeep(printf('No conflicts %s', (a:takeStartLnum == 1 && a:takeEndLnum == line('$') ? 'in buffer' : 'inside range')))
 		return 0
 	    else
 		return 1
@@ -271,7 +268,7 @@ function! ConflictMotions#Take( takeStartLnum, takeEndLnum, arguments )
     elseif ! l:isInsideConflict
 	" Capture failed; the cursor is not inside a conflict.
 	call winrestview(l:save_view)
-	call s:SetErrorAndBeep('Not inside conflict')
+	call ingo#err#SetAndBeep('Not inside conflict')
 	return 0
     else
 	" Take from the current conflict.
@@ -335,7 +332,7 @@ function! ConflictMotions#TakeFromConflict( conflictCnt, currentLnum, startLnum,
 
 	if ! l:isFoundMarker
 	    call cursor(a:startLnum, 1)
-	    call s:SetErrorAndBeep('Conflict marker not found')
+	    call ingo#err#SetAndBeep('Conflict marker not found')
 	    return -1
 	endif
 
