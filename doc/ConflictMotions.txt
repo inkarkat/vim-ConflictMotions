@@ -37,6 +37,8 @@ RELATED WORKS								     *
 - The ConflictToDiff plugin (vimscript #621) can split a (it says CVS, but
   also works for other tools) conflict file back into the two conflicting
   versions and a merge target, and offers commands to merge them.
+- unimpaired.vim (vimscript #1590) has (among many other, largely unrelated)
+  [n / ]n mappings that jump between conflict markers (like [x / ]x).
 
 ==============================================================================
 USAGE						       *ConflictMotions-usage*
@@ -226,7 +228,7 @@ First published version.
 Started development.
 
 ==============================================================================
-Copyright: (C) 2012-2015 Ingo Karkat
+Copyright: (C) 2012-2016 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
