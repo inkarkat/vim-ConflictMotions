@@ -11,6 +11,8 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   2.11.009	31-Dec-2014	FIX: Need to convert the passed range into net
+"				lines, as we're gonna turn off folding.
 "   2.10.008	21-Jul-2014	Handle folded ranges overlapping the conflicts.
 "				Thanks to Maxim Gonchar for reporting this.
 "				When querying which conflict sections to keep,
@@ -344,15 +346,16 @@ function! ConflictMotions#TakeFromConflict( conflictCnt, currentLnum, startLnum,
 	endif
     endfor
 
+    let [l:startLnum, l:endLnum] = [ingo#range#NetStart(a:startLnum), ingo#range#NetEnd(a:endLnum)] " Need to convert the passed range into net lines, as we're gonna turn off folding.
     let l:save_foldenable = &l:foldenable
     setlocal nofoldenable
     try
 	if empty(l:sections)
-	    execute printf('%d,%ddelete _', a:startLnum, a:endLnum)
-	    return (a:endLnum - a:startLnum + 1)
+	    execute printf('%d,%ddelete _', l:startLnum, l:endLnum)
+	    return (l:endLnum - l:startLnum + 1)
 	else
 	    let l:prevLineCnt = line('$')
-	    call ingo#lines#Replace(a:startLnum, a:endLnum, l:sections)
+	    call ingo#lines#Replace(l:startLnum, l:endLnum, l:sections)
 	    return l:prevLineCnt - line('$')
 	endif
     finally
