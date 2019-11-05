@@ -125,7 +125,7 @@ DEPENDENCIES					*ConflictMotions-dependencies*
 
 - Requires Vim 7.0 or higher.
 - Requires the CountJump plugin (vimscript #3130).
-- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.019 or
+- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.029 or
   higher.
 - repeat.vim (vimscript #2136) plugin (optional)
 - visualrepeat.vim (vimscript #3848) plugin (optional)
@@ -172,6 +172,7 @@ HISTORY						     *ConflictMotions-history*
 2.11	RELEASEME
 - FIX: Need to convert the passed range into net lines, as we're gonna turn
   off folding.
+  *** You need to update to ingo-library (vimscript #4433) version 1.029! ***
 
 2.10	21-Jul-2014
 - ENH: Define both normal and visual mode mappings for all mappings, not the
