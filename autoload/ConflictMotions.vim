@@ -5,7 +5,7 @@
 "   - ingo/err.vim autoload script
 "   - ingo/register.vim autoload script
 "
-" Copyright: (C) 2012-2016 Ingo Karkat
+" Copyright: (C) 2012-2020 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -206,11 +206,10 @@ function! s:CaptureSection()
     endif
     return ingo#register#KeepRegisterExecuteOrFunc('silent execute "normal yi" . ' . string(g:ConflictMotions_SectionMapping) . '| return @"')
 endfunction
-function! ConflictMotions#Take( takeStartLnum, takeEndLnum, arguments )
+function! ConflictMotions#Take( hasRange, takeStartLnum, takeEndLnum, arguments )
     let s:stickyChoice = ''
     let l:currentLnum = line('.')
     let l:save_view = winsaveview()
-    let l:hasRange = (a:takeEndLnum != 1)
     let l:arguments = split(a:arguments, '\s\+\|\%(\A\&\S\)\zs')
 
     let l:isMapping = 0
@@ -222,7 +221,7 @@ function! ConflictMotions#Take( takeStartLnum, takeEndLnum, arguments )
     let [l:startLnum, l:endLnum] = s:GetCurrentConflict(l:currentLnum)
     let l:isInsideConflict = (l:startLnum != 0 && l:endLnum != 0)
 
-    if l:hasRange
+    if a:hasRange
 	if l:isInsideConflict && a:takeStartLnum > l:startLnum && a:takeEndLnum < l:endLnum
 	    if l:isMapping && ! empty(l:arguments)
 		call ingo#err#Set('Cannot apply to range inside conflict; select full conflict(s).')

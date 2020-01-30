@@ -1,12 +1,11 @@
 " ConflictMotions.vim: Motions to and inside SCM conflict markers.
 "
 " DEPENDENCIES:
-"   - CountJump/Motion.vim autoload script
-"   - CountJump/TextObject.vim autoload script
-"   - repeat.vim (vimscript #2136) autoload script (optional)
-"   - visualrepeat.vim (vimscript #3848) autoload script (optional)
+"   - CountJump.vim plugin
+"   - repeat.vim (vimscript #2136) plugin (optional)
+"   - visualrepeat.vim (vimscript #3848) plugin (optional)
 "
-" Copyright: (C) 2012-2014 Ingo Karkat
+" Copyright: (C) 2012-2020 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -72,7 +71,8 @@ endif
 
 "- commands --------------------------------------------------------------------
 
-command! -bar -nargs=* -range=1 -complete=customlist,ConflictMotions#Complete ConflictTake if ! ConflictMotions#Take(<line1>, <line2>, <q-args>) | echoerr ingo#err#Get() | endif
+command! -bar -nargs=* -range=-1 -complete=customlist,ConflictMotions#Complete ConflictTake if ! ConflictMotions#Take(<count> != -1, <line1>, <line2>, <q-args>) | echoerr ingo#err#Get() | endif
+
 
 
 "- mappings --------------------------------------------------------------------

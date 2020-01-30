@@ -171,6 +171,9 @@ HISTORY
 ##### 2.11    RELEASEME
 - FIX: Need to convert the passed range into net lines, as we're gonna turn
   off folding.
+- Adapt: :ConflictTake does not recognize that it has no range passed since
+  Vim 8.1.1241. Thanks to lilydjwg for submitting a patch. Need to default
+  -range to -1 and check &lt;count&gt; == -1 instead of &lt;line2&gt;.
 
 __You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.029!__
 
