@@ -9,29 +9,6 @@
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
-"
-" REVISION	DATE		REMARKS
-"   2.10.007	18-Jul-2014	ENH: Define both normal and visual mode
-"				mappings for all mappings, not the exclusive
-"				either-or. The new visual mode mappings will
-"				select the corresponding section in all
-"				conflicts found in the selected range.
-"				(Application on a partially selected conflict is
-"				now denied by an error.)
-"				ENH: Enable repeat of all mappings, also (with
-"				visualrepeat.vim) across modes.
-"   2.01.006	19-May-2014	Abort on error of :ConflictTake.
-"   2.00.005	18-Jan-2013	FIX: Don't create the default mapping for
-"				<Plug>(ConflictMotionsTakeSelection) in select
-"				mode; it should insert a literal <Leader> there.
-"   2.00.004	30-Oct-2012	Add the :ConflictTake command to resolve a
-"				conflict by picking a section(s).
-"   1.10.003	20-Aug-2012	The [z / ]z mappings disable the built-in
-"				mappings for moving over the current open fold.
-"				Change default to [= / ]= / i= / a=.
-"   1.00.002	28-Mar-2012	Make mappings configurable.
-"				Change ix text object to iz.
-"	001	12-Mar-2012	file creation
 
 " Avoid installing twice or when in unsupported Vim version.
 if exists('g:loaded_ConflictMotions') || (v:version < 700)
