@@ -1,65 +1,12 @@
 " ConflictMotions.vim: Motions to and inside SCM conflict markers.
 "
 " DEPENDENCIES:
-"   - ingo/lines.vim autoload script
-"   - ingo/err.vim autoload script
-"   - ingo/register.vim autoload script
+"   - ingo-library.vim plugin
 "
-" Copyright: (C) 2012-2016 Ingo Karkat
+" Copyright: (C) 2012-2020 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
-"
-" REVISION	DATE		REMARKS
-"   2.11.010	17-Dec-2016	Use ingo#err#SetAndBeep().
-"   2.11.009	31-Dec-2014	FIX: Need to convert the passed range into net
-"				lines, as we're gonna turn off folding.
-"   2.10.008	21-Jul-2014	Handle folded ranges overlapping the conflicts.
-"				Thanks to Maxim Gonchar for reporting this.
-"				When querying which conflict sections to keep,
-"				open folds so that if possible the entire
-"				conflict is visible, but at least the section
-"				markers.
-"				Re-allow combining range inside conflict with
-"				section argument, but only for the :ConflictTake
-"				command, not the mappings. Because we cannot
-"				pass the range to the :if necessary for error
-"				handling, it's convenient that the mappings
-"				continue to invoke the :ConflictTake command.
-"				Refactoring: Split arguments earlier.
-"				Indicate invocation from mapping via a special,
-"				hidden "mapping" argument, and print a
-"				(modified) error message only in that case.
-"   2.02.007	18-Jul-2014	Regression: Version 2.01 introduced a bad offset
-"				calculation, potentially resulting in left-over
-"				conflicts, e.g. on :%ConflictTake.
-"				Do not allow combination of a range inside a
-"				conflict with a section argument, as the two
-"				contradict each other. Print an error instead.
-"   2.01.006	19-May-2014	BUG: "E16: Invalid range" error when taking a
-"				conflict section of a hunk at the end of the
-"				file. Use ingo#lines#PutBefore(). Thanks to
-"				Kballard for reporting this on the Vim Tips Wiki
-"				and suggesting the fix.
-"				BUG: Taking conflicts where a single hunk spans
-"				the entire buffer adds a blank line. Use
-"				ingo#lines#Replace(), which now handles this.
-"				Thanks to Kballard for reporting this on the Vim
-"				Tips Wiki.
-"				The CountJump operator-pending mapping will beep
-"				when the inner conflict section is empty, but
-"				for taking such a section, the beep is
-"				unexpected. Detect this special case and skip
-"				the CountJump text object then. Thanks to
-"				Kballard for reporting this on the Vim Tips
-"				Wiki.
-"				Abort on error of :ConflictTake.
-"   2.01.005	05-May-2014	Use ingo#msg#ErrorMsg().
-"   2.01.004	18-Nov-2013	Use ingo#register#KeepRegisterExecuteOrFunc().
-"   2.00.003	04-Apr-2013	Move ingolines#PutWrapper() into ingo-library.
-"   2.00.002	31-Oct-2012	Implement iteration over all markers in the
-"				passed range.
-"   2.00.001	30-Oct-2012	file creation
 let s:save_cpo = &cpo
 set cpo&vim
 
@@ -206,11 +153,10 @@ function! s:CaptureSection()
     endif
     return ingo#register#KeepRegisterExecuteOrFunc('silent execute "normal yi" . ' . string(g:ConflictMotions_SectionMapping) . '| return @"')
 endfunction
-function! ConflictMotions#Take( takeStartLnum, takeEndLnum, arguments )
+function! ConflictMotions#Take( hasRange, takeStartLnum, takeEndLnum, arguments )
     let s:stickyChoice = ''
     let l:currentLnum = line('.')
     let l:save_view = winsaveview()
-    let l:hasRange = (a:takeEndLnum != 1)
     let l:arguments = split(a:arguments, '\s\+\|\%(\A\&\S\)\zs')
 
     let l:isMapping = 0
@@ -222,7 +168,7 @@ function! ConflictMotions#Take( takeStartLnum, takeEndLnum, arguments )
     let [l:startLnum, l:endLnum] = s:GetCurrentConflict(l:currentLnum)
     let l:isInsideConflict = (l:startLnum != 0 && l:endLnum != 0)
 
-    if l:hasRange
+    if a:hasRange
 	if l:isInsideConflict && a:takeStartLnum > l:startLnum && a:takeEndLnum < l:endLnum
 	    if l:isMapping && ! empty(l:arguments)
 		call ingo#err#Set('Cannot apply to range inside conflict; select full conflict(s).')
