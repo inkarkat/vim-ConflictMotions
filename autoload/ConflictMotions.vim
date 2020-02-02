@@ -1,9 +1,7 @@
 " ConflictMotions.vim: Motions to and inside SCM conflict markers.
 "
 " DEPENDENCIES:
-"   - ingo/lines.vim autoload script
-"   - ingo/err.vim autoload script
-"   - ingo/register.vim autoload script
+"   - ingo-library.vim plugin
 "
 " Copyright: (C) 2012-2020 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
