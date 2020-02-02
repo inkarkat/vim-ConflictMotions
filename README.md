@@ -168,7 +168,7 @@ below).
 HISTORY
 ------------------------------------------------------------------------------
 
-##### 2.11    RELEASEME
+##### 2.11    02-Feb-2020
 - FIX: Need to convert the passed range into net lines, as we're gonna turn
   off folding.
 - Adapt: :ConflictTake does not recognize that it has no range passed since
