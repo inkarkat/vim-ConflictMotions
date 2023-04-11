@@ -5,7 +5,7 @@
 "   - repeat.vim (vimscript #2136) plugin (optional)
 "   - visualrepeat.vim (vimscript #3848) plugin (optional)
 "
-" Copyright: (C) 2012-2020 Ingo Karkat
+" Copyright: (C) 2012-2023 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -41,7 +41,7 @@ if ! exists('g:ConflictMotions_TakeMappingPrefix')
     let g:ConflictMotions_TakeMappingPrefix = '<Leader>x'
 endif
 if ! exists('g:ConflictMotions_TakeMappings')
-    let g:ConflictMotions_TakeMappings = [['d', 'None'], ['.', 'This'], ['<lt>', 'Ours'], ['<Bar>', 'Base'], ['>', 'Theirs']]
+    let g:ConflictMotions_TakeMappings = [['d', 'None'], ['.', 'This'], ['<lt>', 'Ours'], ['<Bar>', 'Base'], ['>', 'Theirs'], ['+', 'Both'], ['*', 'All'], ['?', 'Query']]
 endif
 
 
@@ -78,6 +78,18 @@ noremap <silent> <Plug>(ConflictMotionsTakeTheirs)
 \ :ConflictTake mapping theirs<Bar>
 \execute 'silent! call repeat#set("\<lt>Plug>(ConflictMotionsTakeTheirs)", -1)'<Bar>
 \execute 'silent! call visualrepeat#set("\<lt>Plug>(ConflictMotionsTakeTheirs)", -1)'<CR>
+noremap <silent> <Plug>(ConflictMotionsTakeBoth)
+\ :ConflictTake mapping both<Bar>
+\execute 'silent! call repeat#set("\<lt>Plug>(ConflictMotionsTakeBoth)", -1)'<Bar>
+\execute 'silent! call visualrepeat#set("\<lt>Plug>(ConflictMotionsTakeBoth)", -1)'<CR>
+noremap <silent> <Plug>(ConflictMotionsTakeAll)
+\ :ConflictTake mapping all<Bar>
+\execute 'silent! call repeat#set("\<lt>Plug>(ConflictMotionsTakeAll)", -1)'<Bar>
+\execute 'silent! call visualrepeat#set("\<lt>Plug>(ConflictMotionsTakeAll)", -1)'<CR>
+noremap <silent> <Plug>(ConflictMotionsTakeQuery)
+\ :ConflictTake mapping query<Bar>
+\execute 'silent! call repeat#set("\<lt>Plug>(ConflictMotionsTakeQuery)", -1)'<Bar>
+\execute 'silent! call visualrepeat#set("\<lt>Plug>(ConflictMotionsTakeQuery)", -1)'<CR>
 
 nnoremap <silent> <Plug>(ConflictMotionsTakeThis)
 \ :ConflictTake mapping this<Bar>

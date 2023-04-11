@@ -94,6 +94,9 @@ USAGE
     <Leader>x<              Keep our changes, delete the rest.
     <Leader>x|              Keep the change base, delete the rest.
     <Leader>x>              Keep their changes, delete the rest.
+    <Leader>x+              Keep both our and their changes, delete the rest.
+    <Leader>x*              Keep our, the change base, and their changes.
+    <Leader>x?              Ask which sections to take.
 
     <Leader>x.              Keep the current conflict section, delete the rest.
     {Visual}<Leader>x.      From the conflict the cursor is in, remove the markers
@@ -172,12 +175,16 @@ below).
 HISTORY
 ------------------------------------------------------------------------------
 
+##### 2.12    RELEASEME
+- ENH: Add default mappings &lt;Leader&gt;x+, &lt;Leader&gt;x\*, &lt;Leader&gt;x?
+
 ##### 2.11    02-Feb-2020
 - FIX: Need to convert the passed range into net lines, as we're gonna turn
   off folding.
 - Adapt: :ConflictTake does not recognize that it has no range passed since
   Vim 8.1.1241. Thanks to lilydjwg for submitting a patch. Need to default
   -range to -1 and check &lt;count&gt; == -1 instead of &lt;line2&gt;.
+- ENH: Add default mappings &lt;Leader&gt;x+, &lt;Leader&gt;x\*, &lt;Leader&gt;x?
 
 __You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.029!__
 
@@ -238,7 +245,7 @@ in the separator between our and their change).
 - Started development.
 
 ------------------------------------------------------------------------------
-Copyright: (C) 2012-2020 Ingo Karkat -
+Copyright: (C) 2012-2024 Ingo Karkat -
 The [VIM LICENSE](http://vimdoc.sourceforge.net/htmldoc/uganda.html#license) applies to this plugin.
 
 Maintainer:     Ingo Karkat &lt;ingo@karkat.de&gt;
