@@ -132,6 +132,17 @@ To uninstall, use the :RmVimball command.
 - repeat.vim ([vimscript #2136](http://www.vim.org/scripts/script.php?script_id=2136)) plugin (optional)
 - visualrepeat.vim ([vimscript #3848](http://www.vim.org/scripts/script.php?script_id=3848)) plugin (optional)
 
+#### USING VIM-PLUG
+
+```shell
+Plug 'tpope/vim-repeat'
+Plug 'bogado/file-line'
+Plug 'inkarkat/vim-visualrepeat'
+Plug 'inkarkat/vim-CountJump'
+Plug 'inkarkat/vim-ConflictMotions'
+Plug 'inkarkat/vim-ingo-library'
+```
+
 CONFIGURATION
 ------------------------------------------------------------------------------
 
