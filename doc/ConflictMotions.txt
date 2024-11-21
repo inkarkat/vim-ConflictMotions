@@ -188,7 +188,7 @@ below).
 ==============================================================================
 HISTORY						     *ConflictMotions-history*
 
-2.12	RELEASEME
+2.12	21-Nov-2024
 - ENH: Add default mappings <Leader>x+, <Leader>x*, <Leader>x?
 
 2.11	02-Feb-2020
