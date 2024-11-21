@@ -39,6 +39,10 @@ RELATED WORKS								     *
   versions and a merge target, and offers commands to merge them.
 - unimpaired.vim (vimscript #1590) has (among many other, largely unrelated)
   [n / ]n mappings that jump between conflict markers (like [x / ]x).
+- linediff.vim (vimscript #3745) opens a conflict (or generically any selected
+  ranges) as a diff in a separate tab page, allows edits to be synced back,
+  and can pick one section and replace the entire conflict with it (like
+  :ConflictTake).
 
 ==============================================================================
 USAGE						       *ConflictMotions-usage*
@@ -96,13 +100,16 @@ i=			"inner conflict section" text object, select current
 			letter. An uppercase letter will apply the choice to
 			all following conflicts.
 
-			   *<Leader>xd* *<Leader>x<* *<Leader>x|* *<Leader>x>*
-		   *v_<Leader>xd* *v_<Leader>x<* *v_<Leader>x|* *v_<Leader>x>*
+*<Leader>xd* *<Leader>x<* *<Leader>x|* *<Leader>x>* *<Leader>x+* *<Leader>x_star* *<Leader>x?*
+*v_<Leader>xd* *v_<Leader>x<* *v_<Leader>x|* *v_<Leader>x>* *v_<Leader>x+* *v_<Leader>x_star* *v_<Leader>x?*
 <Leader>xd		Delete the entire current conflict / all conflicts in
 			the selection.
 <Leader>x<		Keep our changes, delete the rest.
 <Leader>x|		Keep the change base, delete the rest.
 <Leader>x>		Keep their changes, delete the rest.
+<Leader>x+		Keep both our and their changes, delete the rest.
+<Leader>x*		Keep our, the change base, and their changes.
+<Leader>x?		Ask which sections to take.
 						   *<Leader>x.* *v_<Leader>x.*
 <Leader>x.		Keep the current conflict section, delete the rest.
 {Visual}<Leader>x.	From the conflict the cursor is in, remove the markers
@@ -181,12 +188,16 @@ below).
 ==============================================================================
 HISTORY						     *ConflictMotions-history*
 
+2.12	21-Nov-2024
+- ENH: Add default mappings <Leader>x+, <Leader>x*, <Leader>x?
+
 2.11	02-Feb-2020
 - FIX: Need to convert the passed range into net lines, as we're gonna turn
   off folding.
 - Adapt: :ConflictTake does not recognize that it has no range passed since
   Vim 8.1.1241. Thanks to lilydjwg for submitting a patch. Need to default
   -range to -1 and check <count> == -1 instead of <line2>.
+- ENH: Add default mappings <Leader>x+, <Leader>x*, <Leader>x?
   *** You need to update to ingo-library (vimscript #4433) version 1.029! ***
 
 2.10	21-Jul-2014
@@ -244,7 +255,7 @@ First published version.
 Started development.
 
 ==============================================================================
-Copyright: (C) 2012-2020 Ingo Karkat
+Copyright: (C) 2012-2024 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
