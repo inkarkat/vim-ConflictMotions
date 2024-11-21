@@ -175,7 +175,7 @@ below).
 HISTORY
 ------------------------------------------------------------------------------
 
-##### 2.12    RELEASEME
+##### 2.12    21-Nov-2024
 - ENH: Add default mappings &lt;Leader&gt;x+, &lt;Leader&gt;x\*, &lt;Leader&gt;x?
 
 ##### 2.11    02-Feb-2020
