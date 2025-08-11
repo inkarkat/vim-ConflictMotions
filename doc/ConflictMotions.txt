@@ -191,6 +191,7 @@ HISTORY						     *ConflictMotions-history*
 2.13	RELEASEME
 - BUG: <Leader>x? gives "E490: No fold found" if the conflict doesn't have
   folds.
+- BUG: Regression: <Leader>x? gives "Invalid argument"
 
 2.12	21-Nov-2024
 - ENH: Add default mappings <Leader>x+, <Leader>x*, <Leader>x?

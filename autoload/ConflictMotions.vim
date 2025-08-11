@@ -269,7 +269,7 @@ function! ConflictMotions#TakeFromConflict( conflictCnt, currentLnum, startLnum,
 		return -1
 	    else
 		" Recurse with the arguments resolved by the user query.
-		return ConflictMotions#TakeFromConflict(a:conflictCnt, a:currentLnum, a:startLnum, a:endLnum, l:response, '', a:isKeepRange, a:takeStartLnum, a:takeEndLnum)
+		return ConflictMotions#TakeFromConflict(a:conflictCnt, a:currentLnum, a:startLnum, a:endLnum, [l:response], '', a:isKeepRange, a:takeStartLnum, a:takeEndLnum)
 	    endif
 	else
 	    call ingo#err#Set('Invalid argument: ' . l:what)
