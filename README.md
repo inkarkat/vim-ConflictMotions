@@ -179,6 +179,7 @@ HISTORY
 - BUG: &lt;Leader&gt;x? gives "E490: No fold found" if the conflict doesn't have
   folds.
 - BUG: Regression: &lt;Leader&gt;x? gives "Invalid argument"
+- FIX: "E474: Invalid argument" when skipping a conflict
 
 ##### 2.12    21-Nov-2024
 - ENH: Add default mappings &lt;Leader&gt;x+, &lt;Leader&gt;x\*, &lt;Leader&gt;x?

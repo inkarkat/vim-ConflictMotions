@@ -242,7 +242,7 @@ function! ConflictMotions#TakeFromConflict( conflictCnt, currentLnum, startLnum,
 
 	let l:isFoundMarker = 0
 	if l:what ==? 'skip' || l:what ==# '/'
-	    call cursor(a:endLnum)
+	    call cursor(a:endLnum, 1)
 	    return 0
 	elseif l:what ==? 'none' || l:what ==# '-'
 	    let l:isFoundMarker = 1
