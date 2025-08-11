@@ -175,6 +175,10 @@ below).
 HISTORY
 ------------------------------------------------------------------------------
 
+##### 2.13    RELEASEME
+- BUG: &lt;Leader&gt;x? gives "E490: No fold found" if the conflict doesn't have
+  folds.
+
 ##### 2.12    21-Nov-2024
 - ENH: Add default mappings &lt;Leader&gt;x+, &lt;Leader&gt;x\*, &lt;Leader&gt;x?
 
@@ -245,7 +249,7 @@ in the separator between our and their change).
 - Started development.
 
 ------------------------------------------------------------------------------
-Copyright: (C) 2012-2024 Ingo Karkat -
+Copyright: (C) 2012-2025 Ingo Karkat -
 The [VIM LICENSE](http://vimdoc.sourceforge.net/htmldoc/uganda.html#license) applies to this plugin.
 
 Maintainer:     Ingo Karkat &lt;ingo@karkat.de&gt;

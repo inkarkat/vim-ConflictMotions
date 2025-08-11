@@ -3,7 +3,7 @@
 " DEPENDENCIES:
 "   - ingo-library.vim plugin
 "
-" Copyright: (C) 2012-2020 Ingo Karkat
+" Copyright: (C) 2012-2025 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -50,7 +50,7 @@ function! s:Query( conflictCnt, startLnum, endLnum )
     if l:conflictHeight + 2 < l:currentHeight
 	" The entire conflict easily fits into the current window; open all
 	" folds.
-	execute printf('%d,%dfoldopen!', a:startLnum, a:endLnum)
+	execute printf('silent! %d,%dfoldopen!', a:startLnum, a:endLnum)
     else
 	" The conflict does not / only barely fits into the current window; just
 	" make the lines with the fold markers visible (entire substructures
