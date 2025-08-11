@@ -47,7 +47,9 @@ function! s:Query( conflictCnt, startLnum, endLnum )
     let l:conflictHeight = a:endLnum - a:startLnum + 1
 
     " Open folds.
-    if l:conflictHeight + 2 < l:currentHeight
+    if ! &l:foldenable
+	" No action necessary.
+    elseif l:conflictHeight + 2 < l:currentHeight
 	" The entire conflict easily fits into the current window; open all
 	" folds.
 	execute printf('silent! %d,%dfoldopen!', a:startLnum, a:endLnum)
