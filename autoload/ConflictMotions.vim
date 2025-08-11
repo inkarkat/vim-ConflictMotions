@@ -3,7 +3,7 @@
 " DEPENDENCIES:
 "   - ingo-library.vim plugin
 "
-" Copyright: (C) 2012-2020 Ingo Karkat
+" Copyright: (C) 2012-2025 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -47,10 +47,12 @@ function! s:Query( conflictCnt, startLnum, endLnum )
     let l:conflictHeight = a:endLnum - a:startLnum + 1
 
     " Open folds.
-    if l:conflictHeight + 2 < l:currentHeight
+    if ! &l:foldenable
+	" No action necessary.
+    elseif l:conflictHeight + 2 < l:currentHeight
 	" The entire conflict easily fits into the current window; open all
 	" folds.
-	execute printf('%d,%dfoldopen!', a:startLnum, a:endLnum)
+	execute printf('silent! %d,%dfoldopen!', a:startLnum, a:endLnum)
     else
 	" The conflict does not / only barely fits into the current window; just
 	" make the lines with the fold markers visible (entire substructures
@@ -242,7 +244,7 @@ function! ConflictMotions#TakeFromConflict( conflictCnt, currentLnum, startLnum,
 
 	let l:isFoundMarker = 0
 	if l:what ==? 'skip' || l:what ==# '/'
-	    call cursor(a:endLnum)
+	    call cursor(a:endLnum, 1)
 	    return 0
 	elseif l:what ==? 'none' || l:what ==# '-'
 	    let l:isFoundMarker = 1
@@ -269,7 +271,7 @@ function! ConflictMotions#TakeFromConflict( conflictCnt, currentLnum, startLnum,
 		return -1
 	    else
 		" Recurse with the arguments resolved by the user query.
-		return ConflictMotions#TakeFromConflict(a:conflictCnt, a:currentLnum, a:startLnum, a:endLnum, l:response, '', a:isKeepRange, a:takeStartLnum, a:takeEndLnum)
+		return ConflictMotions#TakeFromConflict(a:conflictCnt, a:currentLnum, a:startLnum, a:endLnum, [l:response], '', a:isKeepRange, a:takeStartLnum, a:takeEndLnum)
 	    endif
 	else
 	    call ingo#err#Set('Invalid argument: ' . l:what)
